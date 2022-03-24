@@ -6,70 +6,74 @@ const closePlotModalButton = document.querySelector("#plottingModal > div > div 
 const chartElement = document.getElementById('chart-div');
 const loadingElement = document.getElementById('loading-element');
 
- function clearDashboardLogo() {
+function clearDashboardLogo() {
     dashboardLogo.style.display = "none";
 }
 
-function closePlottingModal() {
+ function closePlottingModal() {
     closePlotModalButton.click();
 }
 
 
 function plotChart() {
-    google.load("visualization", "1", { packages: ["corechart"] });
+     
+     setTimeout(() => {
+         google.load("visualization", "1", { packages: ["corechart"] });
     google.setOnLoadCallback(drawChart);
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['X', 'Points', 'Line','Line'],
-            ["17-18", 3.5, 5,10],
-            ["18-19", 5.5, 5,10],
-            ["19-20", 5, 5,10],
-            ["20-21", 7, 5,10]
-        ]);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['X', 'Points', 'Line', 'Line'],
+                ["17-18", 3.5, 5, 10],
+                ["18-19", 5.5, 5, 10],
+                ["19-20", 5, 5, 10],
+                ["20-21", 7, 5, 10]
+            ]);
 
-        var options = {
-            title: 'Scatter Chart with a line',
-            hAxis: { title: 'X', minValue: 0, maxValue: 15 },
-            vAxis: { title: 'Y', minValue: 0, maxValue: 15 },
-            legend: 'none',
-            interpolateNulls: true,
-            series: {
-                1: { lineWidth: 1, pointSize: 0 },
-                2:  { lineWidth: 1, pointSize: 0 }
-            },
-            width: '100%',
-            height: '100%',
-            backgroundColor: { fill: 'transparent' }
-        };
+            var options = {
+                title: 'Scatter Chart with a line',
+                hAxis: { title: 'X', minValue: 0, maxValue: 15 },
+                vAxis: { title: 'Y', minValue: 0, maxValue: 15 },
+                legend: 'none',
+                interpolateNulls: true,
+                series: {
+                    1: { lineWidth: 1, pointSize: 0 },
+                    2: { lineWidth: 1, pointSize: 0 }
+                },
+                width: '100%',
+                height: '100%',
+                backgroundColor: { fill: 'transparent' }
+            };
 
-        chartElement.style.display = "flex";
+            chartElement.style.display = "flex";
 
-        var chart = new google.visualization.ScatterChart(chartElement);
-        chart.draw(data, options);
+            var chart = new google.visualization.ScatterChart(chartElement);
+            chart.draw(data, options);
         
-        
+    
     }
+    }, 2000);
+    
 }
 
 
-function clearLoadingElement() {
+ function clearloadingElement() {
     loadingElement.style.display = "none";
 }
 
 
-function displayLoadingAnimation() {
-    loadingElement.style.display = "inline-block";
-    setTimeout(()=>{
-    clearLoadingElement()
-    }, 3000);
+ function displayLoadingAnimation() {
+    loadingElement.style.display = "block";
+     setTimeout(() => {
+         clearloadingElement()
+    }, 2000);
 }
 
 // I'll either have to use .then sytax or set up a webpack environment
-function plotTrasition() {
-    clearDashboardLogo();
-    closePlottingModal();
-    // displayLoadingAnimation();
-    plotChart();
+async function plotTrasition() {
+    await clearDashboardLogo();
+    await closePlottingModal();
+    await displayLoadingAnimation();
+    await plotChart();
 }
 
 

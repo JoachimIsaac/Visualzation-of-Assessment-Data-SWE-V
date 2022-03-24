@@ -114,6 +114,15 @@ body{
     }
 }
 
+
+#loading-element{
+    display: none;
+    width: 4rem;
+    height: 4rem;
+    color: #1a8cff;
+}
+
+
 #chart-div{
     display: none;
     width: 100%;

@@ -4,7 +4,8 @@ import { defineConfig } from 'vite'
       server: {
     host: '0.0.0.0',
     hmr: {
-      port: 443,
+
+      hostname:"localhost"
     }
   },
       css: {
