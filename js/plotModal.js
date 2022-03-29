@@ -185,3 +185,4 @@ modalPlotStartDateSelector.addEventListener('change', () => {
 window.addEventListener("load", () => {
     loadPlotSloSelector();
 });
+
