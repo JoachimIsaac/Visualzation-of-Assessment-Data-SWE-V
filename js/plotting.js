@@ -21,6 +21,18 @@ const targetPlotRadioButtonT1 = document.querySelector("#\\=target-radio-2");
 const targetPlotRadioButtonT2 = document.querySelector("#\\=target-radio-3");
 //remember to fill up the rest of the dates when there are less than the tar
 
+const targetPlotSelectorColorT1Option = document.querySelector("#settings-container > div.option.t1.color");
+const targetPlotSelectorColorT2Option = document.querySelector("#settings-container > div.option.t2.color")
+
+const targetPlotColorSelectorT1 = document.querySelector("#t1-color-selector");
+const targetPlotColorSelectorT2 = document.querySelector("#t2-color-selector");
+
+
+google.load("visualization", "1", { packages: ["corechart"] });
+var chartObj; 
+
+
+
 function hideDashboardLogo() {
     dashboardLogo.style.display = "none";
 }
@@ -113,6 +125,38 @@ async function plotTransitionEditedTargets() {
 }
 
 
+async function plotTransitionEditedTargetColors(t1Color,t2Color) {
+    
+    let plotDataUrl = await generatePlotDataQueryUrl();
+  
+    if (chartElement.children.length > 0) {
+        // await removeFirstInnerElement(chartElement);
+        await hideChartElement();
+    }
+     
+    await displayLoadingAnimation();
+
+
+    if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
+        await plotChartWithBothTargets(plotDataUrl,t1Color,t2Color);
+        console.log("plot both")
+    }
+    else {
+        if (target1RadioButtonChecked()) {//change to see if t1 checked
+            await plotChartBasedOnTargets(plotDataUrl, "T1",t1Color,t2Color);
+            console.log("plot t1")
+        }
+        else {
+            await plotChartBasedOnTargets(plotDataUrl, "T2",t1Color,t2Color);
+            console.log("plot t2")
+        }
+
+    }
+
+    await displayChartElement();
+    // setTimeout(() => {displayPlotSettingsContainer()}, 2100);
+}
+
 function loadDataTableBothTargets(plotDataObj){// load the data table 
   console.log(plotDataObj)
   let result = [
@@ -158,7 +202,7 @@ function loadDataTableBasedOnTargets(plotDataObj, target) {
       // rowArray.push(dataObj.T2[index]);
       result.push(rowArray);
     }
-  
+        console.log(result);
     return result; 
         
 }
@@ -180,7 +224,7 @@ else {
       
     result.push(rowArray);
   }
-
+console.log(result);
   return result;
     }
 
@@ -246,7 +290,28 @@ function hideChartElement() {
 }
 
 
-function plotChartWithBothTargets(requestUrl) {
+function displayColorOptionT1() {
+    targetPlotSelectorColorT1Option.style.display = "block";
+}
+
+
+function displayColorOptionT2() {
+    targetPlotSelectorColorT2Option.style.display = "block";
+
+}
+
+
+function hideColorOptionT1() { 
+    targetPlotSelectorColorT1Option.style.display = "none";
+}
+
+function hideColorOptionT2() { 
+    targetPlotSelectorColorT2Option.style.display = "none";
+}
+
+
+
+function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF") {
 
     setTimeout(() => {
 
@@ -257,7 +322,7 @@ function plotChartWithBothTargets(requestUrl) {
         console.log(plottingDataObj)
    
         
-        google.load("visualization", "1", { packages: ["corechart"] });
+       
         google.setOnLoadCallback(drawChart);
 
          function drawChart() {
@@ -270,7 +335,7 @@ function plotChartWithBothTargets(requestUrl) {
             vAxis: { title: 'Percentage-met', minValue: 0, maxValue: 15 },
             legend: 'none',
             interpolateNulls: true,
-            colors:["red","blue"],//Give it two colors to choose from
+            colors:[t1Color,t2Color],//Give it two colors to choose from
             //you can change the red and blue by chaning via indexes
             //index 0 is t1 and index 1 ins t2
             
@@ -287,8 +352,8 @@ function plotChartWithBothTargets(requestUrl) {
                 legend:'right'//add legend to the right 
             };
 
-            let chart = new google.visualization.ScatterChart(document.getElementById('chart-div'));
-            chart.draw(data, options);   
+            chartObj = new google.visualization.ScatterChart(document.getElementById('chart-div'));
+            chartObj.draw(data, options);   
          }
         
         
@@ -300,31 +365,33 @@ function plotChartWithBothTargets(requestUrl) {
 
 
 
-function plotChartBasedOnTargets(requestUrl, target) { //change the inside to handle one based on hte 
+function plotChartBasedOnTargets(requestUrl, target,t1Color="#FF0000",t2Color="#0000FF") { //change the inside to handle one based on hte 
     
     setTimeout(() => {
     
-    let plottingDataObj;
+        let plottingDataObj;
+        let pickedColors = target == "T1" ? [t1Color, t1Color] : [t2Color, t2Color];
 
     axios.get(requestUrl).then(response => {
         plottingDataObj = response.data;
         console.log(plottingDataObj)
    
         
-        google.load("visualization", "1", { packages: ["corechart"] });
-        google.setOnLoadCallback(drawChart);
+        // google.load("visualization", "1", { packages: ["corechart"] });
+        google.setOnLoadCallback(drawChartBasedOnTarget);
 
-         function drawChart() {
+         function drawChartBasedOnTarget() {
             console.log(loadDataTableBasedOnTargets(plottingDataObj, target))
-            let data = google.visualization.arrayToDataTable(loadDataTableBothTargets(plottingDataObj));
-
+            let data = google.visualization.arrayToDataTable(loadDataTableBasedOnTargets(plottingDataObj, target));
+            console.log("transformed data: ")
+            console.log(data);
             let options = {
             title: plottingDataObj.title,//Add school title from obj
             hAxis: { title: 'School Term', minValue: 0, maxValue: 15 },
             vAxis: { title: 'Percentage-met', minValue: 0, maxValue: 15 },
             legend: 'none',
             interpolateNulls: true,
-            colors:["red","blue"],//Give it two colors to choose from
+            colors:pickedColors,//Give it two colors to choose from
             //you can change the red and blue by chaning via indexes
             //index 0 is t1 and index 1 ins t2
             
@@ -341,8 +408,8 @@ function plotChartBasedOnTargets(requestUrl, target) { //change the inside to ha
                 legend:'right'//add legend to the right 
             };
 
-            let chart = new google.visualization.ScatterChart(document.getElementById('chart-div'));
-            chart.draw(data, options);   
+            chartObj = new google.visualization.ScatterChart(document.getElementById('chart-div'));
+            chartObj.draw(data, options);   
          }
         
         
@@ -430,22 +497,48 @@ plotButton.addEventListener('click', () => {
 });
 
 
-
-
 targetPlotRadioButtonBoth.addEventListener('change', () => {
-    plotTransitionEditedTargets();
+    // plotTransitionEditedTargets();
+    let t1Color = targetPlotColorSelectorT1.value;
+    let t2Color = targetPlotColorSelectorT2.value;
+    plotTransitionEditedTargetColors(t1Color, t2Color);
+    displayColorOptionT2();
+    displayColorOptionT1();
 });
 
+
 targetPlotRadioButtonT1.addEventListener('change', () => {
-    plotTransitionEditedTargets();
+    // plotTransitionEditedTargets();
+    let t1Color = targetPlotColorSelectorT1.value;
+    let t2Color = targetPlotColorSelectorT2.value;
+    plotTransitionEditedTargetColors(t1Color, t2Color);
+    hideColorOptionT2();
+    displayColorOptionT1()
 });
 
 
 targetPlotRadioButtonT2.addEventListener('change', () => {
-    plotTransitionEditedTargets();
+    // plotTransitionEditedTargets();
+    let t1Color = targetPlotColorSelectorT1.value;
+    let t2Color = targetPlotColorSelectorT2.value;
+    plotTransitionEditedTargetColors(t1Color, t2Color);
+    hideColorOptionT1(); 
+    displayColorOptionT2();
 });
 
 
+targetPlotColorSelectorT1.addEventListener('change', () => {
+    let t1Color = targetPlotColorSelectorT1.value;
+    let t2Color = targetPlotColorSelectorT2.value;
+    plotTransitionEditedTargetColors(t1Color, t2Color);
+});
+
+
+targetPlotColorSelectorT2.addEventListener('change', () => {
+    let t1Color = targetPlotColorSelectorT1.value;
+    let t2Color = targetPlotColorSelectorT2.value;
+    plotTransitionEditedTargetColors(t1Color, t2Color);
+});
 
 
 //plot query structure:

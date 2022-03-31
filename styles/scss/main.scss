@@ -74,6 +74,50 @@ body{
 }
 
 
+
+
+#settings-container{
+    display: none;
+    justify-content: center;
+    border-top: 5px solid lightgrey;
+    border-bottom: 5px solid lightgrey;
+    width:100%;
+    position: absolute;
+    margin-top: 70px;
+    z-index: 3;
+    div.option{
+        margin-right:1rem;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    // div.option.t1.color{
+    
+    // }
+
+    // div.option.t2.color{
+
+    // }
+
+
+    // div.option{
+        
+    // }
+    
+    // div.option.\32 {
+    // }
+}
+
+
+#t1-color-selector{
+height: 1.2rem;
+}
+
+#t2-color-selector{
+    height: 1.2rem;
+}
+
+
 #interactive-area{
         width: 100%;
         height: 86%;
@@ -84,6 +128,7 @@ body{
         align-content: center;
         overflow-y: hidden; /* Hide vertical scrollbar */
         overflow-x: hidden; /* Hide horizontal scrollbar */
+        position: absolute;
     #dashboard-logo{
         margin-top: 45px;
         animation-name: spin;
@@ -131,27 +176,7 @@ body{
     justify-content: center;
     position: absolute;
     top: 2.5rem;
+    margin-top: 55px;
+    
 }
 
-#settings-container{
-    display: none;
-    justify-content: center;
-    border-top: 5px solid lightgrey;
-    border-bottom: 5px solid lightgrey;
-    width:100%;
-
-    div.option{
-        margin-right:1rem;
-    }
-
-    // div.option.\31 {
-       
-    
-    // }
-    
-    // div.option.\32 {
-
-    
-    // }
-
-}
