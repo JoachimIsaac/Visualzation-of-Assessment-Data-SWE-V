@@ -19,6 +19,7 @@ function clearPlotMeasureSelector() {
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose Measure";
+    tempOption.disabled = true;
     modalPlotMeasureSelector.appendChild(tempOption);
 }
 
@@ -42,6 +43,7 @@ function clearPlotStartDateSelector() {
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose Start Date";
+
      modalPlotStartDateSelector.appendChild(tempOption);
 }
 
@@ -51,6 +53,7 @@ function clearPlotEndDateSelector() {
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose End Date";
+   
     modalPlotEndDateSelector.appendChild(tempOption);
 }
 

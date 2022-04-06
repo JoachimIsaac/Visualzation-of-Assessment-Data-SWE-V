@@ -186,7 +186,7 @@
     width: 80%;
     text-align: center;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 }
 
 #data-input-button{
@@ -258,6 +258,14 @@
 
 }
 
+
+.invalid-feedback.selector{
+    justify-content: center;
+}
+
+.invalid-feedback.inputfield{
+    justify-content: flex-end;
+}
 
 // #dataInputModal > div > div > div.modal-body > form > div:nth-child(3) > div.input-group-prepend.ms-3{
 //     margin-left: 0;

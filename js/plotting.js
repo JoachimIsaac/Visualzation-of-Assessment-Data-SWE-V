@@ -27,6 +27,10 @@ const targetPlotSelectorColorT2Option = document.querySelector("#settings-contai
 const targetPlotColorSelectorT1 = document.querySelector("#t1-color-selector");
 const targetPlotColorSelectorT2 = document.querySelector("#t2-color-selector");
 
+const pointSizeSelector = document.querySelector("#point-size-selector");
+const lineSizeSelector = document.querySelector("#line-size-selector");
+
+///use set timeout outside of the function rather than inside that will make it mor choesive 
 
 google.load("visualization", "1", { packages: ["corechart"] });
 var chartObj; 
@@ -129,12 +133,12 @@ async function plotTransitionEditedTargetColors(t1Color,t2Color) {
     
     let plotDataUrl = await generatePlotDataQueryUrl();
   
-    if (chartElement.children.length > 0) {
-        // await removeFirstInnerElement(chartElement);
-        await hideChartElement();
-    }
+    // if (chartElement.children.length > 0) {
+    //     // await removeFirstInnerElement(chartElement);
+    //     await hideChartElement();
+    // }
      
-    await displayLoadingAnimation();
+    // await displayLoadingAnimation();
 
 
     if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
@@ -156,6 +160,77 @@ async function plotTransitionEditedTargetColors(t1Color,t2Color) {
     await displayChartElement();
     // setTimeout(() => {displayPlotSettingsContainer()}, 2100);
 }
+
+
+                /////makes these//////
+async function plotTransitonEditedGraphLineSize(lineSize) {
+    const red = "#FF0000";
+    const blue = "#0000FF";
+    const pointSize = 10;
+
+    let plotDataUrl = await generatePlotDataQueryUrl();
+  
+    // if (chartElement.children.length > 0) {
+        // await removeFirstInnerElement(chartElement);
+        //await hideChartElement();
+    // }
+     
+    // await displayLoadingAnimation();
+
+
+    if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
+        await plotChartWithBothTargets(plotDataUrl,red,blue,pointSize,lineSize);
+        console.log("plot both")
+    }
+    else {
+        if (target1RadioButtonChecked()) {//change to see if t1 checked
+            await plotChartBasedOnTargets(plotDataUrl, "T1",red,blue,pointSize,lineSize);
+            console.log("plot t1")
+        }
+        else {
+            await plotChartBasedOnTargets(plotDataUrl, "T2",red,blue,pointSize,lineSize);
+            console.log("plot t2")
+        }
+
+    }
+
+    await displayChartElement();
+
+
+}
+
+async function plotTransitionEditedGraphPointSize(pointSize) {
+    const red = "#FF0000";
+    const blue = "#0000FF";
+    let plotDataUrl = await generatePlotDataQueryUrl();
+  
+    // if (chartElement.children.length > 0) {
+    //     // await removeFirstInnerElement(chartElement);
+    //     await hideChartElement();
+    // }
+     
+    // await displayLoadingAnimation();
+
+
+    if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
+        await plotChartWithBothTargets(plotDataUrl,red ,blue,pointSize);
+        console.log("plot both")
+    }
+    else {
+        if (target1RadioButtonChecked()) {//change to see if t1 checked
+            await plotChartBasedOnTargets(plotDataUrl, "T1",red,blue,pointSize);
+            console.log("plot t1")
+        }
+        else {
+            await plotChartBasedOnTargets(plotDataUrl, "T2",red,blue,pointSize);
+            console.log("plot t2")
+        }
+
+    }
+
+    await displayChartElement();
+
+ }
 
 function loadDataTableBothTargets(plotDataObj){// load the data table 
   console.log(plotDataObj)
@@ -310,12 +385,13 @@ function hideColorOptionT2() {
 }
 
 
-
-function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF") {
+//take out set time out and do it where we call it in the first place ()
+function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF",pointSize=10,lineSize = 1) {
 
     setTimeout(() => {
 
-    let plottingDataObj;
+        let plottingDataObj;
+        let pickedColors = [t1Color,t2Color]
 
     axios.get(requestUrl).then(response => {
         plottingDataObj = response.data;
@@ -335,7 +411,9 @@ function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF"
             vAxis: { title: 'Percentage-met', minValue: 0, maxValue: 15 },
             legend: 'none',
             interpolateNulls: true,
-            colors:[t1Color,t2Color],//Give it two colors to choose from
+            pointSize: pointSize,
+            colors: pickedColors,
+            //Give it two colors to choose from
             //you can change the red and blue by chaning via indexes
             //index 0 is t1 and index 1 ins t2
             
@@ -343,8 +421,8 @@ function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF"
             series: {//control the shapes and line graph or just points
                     0:{pointShape:{type:'square'}},
                     1:{pointShape:{type:'star', sides:5,dent:0.6}},
-                    2: { lineWidth: 1, pointSize: 0 },
-                    3:  { lineWidth: 1, pointSize: 0 }
+                    2: { lineWidth: lineSize, pointSize: 0 },
+                    3:  { lineWidth: lineSize, pointSize: 0 }
                 },
                 width: '100%',
                 height: '100%',
@@ -365,7 +443,8 @@ function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF"
 
 
 
-function plotChartBasedOnTargets(requestUrl, target,t1Color="#FF0000",t2Color="#0000FF") { //change the inside to handle one based on hte 
+function plotChartBasedOnTargets(requestUrl, target, t1Color = "#FF0000", t2Color = "#0000FF", pointSize = 10, lineSize = 1) {
+    //change the inside to handle one based on hte
     
     setTimeout(() => {
     
@@ -391,6 +470,7 @@ function plotChartBasedOnTargets(requestUrl, target,t1Color="#FF0000",t2Color="#
             vAxis: { title: 'Percentage-met', minValue: 0, maxValue: 15 },
             legend: 'none',
             interpolateNulls: true,
+            pointSize: pointSize,
             colors:pickedColors,//Give it two colors to choose from
             //you can change the red and blue by chaning via indexes
             //index 0 is t1 and index 1 ins t2
@@ -399,7 +479,7 @@ function plotChartBasedOnTargets(requestUrl, target,t1Color="#FF0000",t2Color="#
             series: {//control the shapes and line graph or just points
                 0:{pointShape:{type:'square'}},
                 // 1:{pointShape:{type:'star', sides:5,dent:0.6}},
-                1: { lineWidth: 1, pointSize: 0 }
+                1: { lineWidth: lineSize, pointSize: 0 }
                 // 3:  { lineWidth: 1, pointSize: 0 }
             },
                 width: '100%',
@@ -442,7 +522,7 @@ function generatePlotDataQueryUrl() {
     return url;
 }
  
-
+//Make sure I give popup if they don't select everything.
 
 function allPlottingInfoIsSelected() {
     let defaultSelectedSlo = sloSelectorElement.options[0].text;
@@ -534,11 +614,29 @@ targetPlotColorSelectorT1.addEventListener('change', () => {
 });
 
 
-targetPlotColorSelectorT2.addEventListener('change', () => {
+targetPlotColorSelectorT2.addEventListener('change',() => {
     let t1Color = targetPlotColorSelectorT1.value;
     let t2Color = targetPlotColorSelectorT2.value;
     plotTransitionEditedTargetColors(t1Color, t2Color);
 });
+
+
+
+pointSizeSelector.addEventListener('change',() => {
+    let pointSize = parseInt(pointSizeSelector.value);
+    //plotTransitionfor point fucntion
+    plotTransitionEditedGraphPointSize(pointSize);
+    
+});
+
+
+lineSizeSelector.addEventListener('change',() => {
+    let lineSize = parseInt(lineSizeSelector.value);
+    //plotTransitionfor line fucntion
+    plotTransitonEditedGraphLineSize(lineSize);
+});
+
+
 
 
 //plot query structure:

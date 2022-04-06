@@ -99,6 +99,7 @@ function clearInputMeasureSelector() {
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose Measure";
+    tempOption.disabled = true;
     modalInputMeasureSelector.appendChild(tempOption);
 }
 
@@ -109,6 +110,7 @@ function clearInputTargetSelector() {
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose Target";
+    // tempOption.disabled = true;
     modalInputTargetSelector.appendChild(tempOption);
 }
 
@@ -145,6 +147,7 @@ function loadMeasureDescriptionData(selectedSlo, selectedMeasure) {
 modalInputSloSelector.addEventListener('change',() => {
     clearInputMeasureSelector();
     clearInputTargetSelector();
+    
     modalInputMeasureDescriptionContainer.style.display = "none";
 
    let selectedSlo = modalInputSloSelector.options[modalInputSloSelector.selectedIndex].textContent;

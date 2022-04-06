@@ -81,10 +81,12 @@ body{
     justify-content: center;
     border-top: 5px solid lightgrey;
     border-bottom: 5px solid lightgrey;
+    background-color: #d7d7d7;
     width:100%;
     position: absolute;
     margin-top: 70px;
     z-index: 3;
+    padding: 5px;
     div.option{
         margin-right:1rem;
         font-size: 1.2rem;
