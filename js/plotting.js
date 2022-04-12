@@ -13,8 +13,11 @@ const endDateSelectorElement = document.getElementById('end-selector-plt');
 const targetPlotSelectorsContainer = document.getElementById('settings-container');
 
 
-const targetPlotSelectorT1Option = document.querySelector("#settings-container > div.option.\\31 ");
-const targetPlotSelectorT2Option = document.querySelector("#settings-container > div.option.\\32 ");
+// const targetPlotSelectorT1Option = document.querySelector("#settings-container > div.option.\\31 ");
+// const targetPlotSelectorT2Option = document.querySelector("#settings-container > div.option.\\32 ");
+const targetPlotOptionButtonBoth = document.querySelector("#settings-container > div.option.\\31 ");
+const targetPlotOptionButtonT1 = document.querySelector("#settings-container > div.option.\\32 ")
+const targetPlotOptionButtonT2 = document.querySelector("#settings-container > div.option.\\33 ");
 
 const targetPlotRadioButtonBoth = document.querySelector("#\\=target-radio-1");
 const targetPlotRadioButtonT1 = document.querySelector("#\\=target-radio-2");
@@ -92,6 +95,10 @@ function removeFirstInnerElement(parentElement){
 
 
 async function plotTransitionEditedTargets() {
+
+    
+
+    
     
     let plotDataUrl = await generatePlotDataQueryUrl();
   
@@ -129,7 +136,13 @@ async function plotTransitionEditedTargets() {
 }
 
 
-async function plotTransitionEditedTargetColors(t1Color,t2Color) {
+async function plotTransitionEditedTargetColors() {
+    
+    let t1Color = document.querySelector("#t1-color-selector").value;
+    let t2Color = document.querySelector("#t2-color-selector").value;
+    let pointSizeValue = document.querySelector("#point-size-selector");
+    let lineSizeValue = document.querySelector("#line-size-selector");
+
     
     let plotDataUrl = await generatePlotDataQueryUrl();
   
@@ -142,16 +155,16 @@ async function plotTransitionEditedTargetColors(t1Color,t2Color) {
 
 
     if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
-        await plotChartWithBothTargets(plotDataUrl,t1Color,t2Color);
+        await plotChartWithBothTargets(plotDataUrl );
         console.log("plot both")
     }
     else {
         if (target1RadioButtonChecked()) {//change to see if t1 checked
-            await plotChartBasedOnTargets(plotDataUrl, "T1",t1Color,t2Color);
+            await plotChartBasedOnTargets(plotDataUrl, "T1" );
             console.log("plot t1")
         }
         else {
-            await plotChartBasedOnTargets(plotDataUrl, "T2",t1Color,t2Color);
+            await plotChartBasedOnTargets(plotDataUrl, "T2");
             console.log("plot t2")
         }
 
@@ -163,10 +176,8 @@ async function plotTransitionEditedTargetColors(t1Color,t2Color) {
 
 
                 /////makes these//////
-async function plotTransitonEditedGraphLineSize(lineSize) {
-    const red = "#FF0000";
-    const blue = "#0000FF";
-    const pointSize = 10;
+async function plotTransitonEditedGraphLineSize() {
+    
 
     let plotDataUrl = await generatePlotDataQueryUrl();
   
@@ -179,16 +190,16 @@ async function plotTransitonEditedGraphLineSize(lineSize) {
 
 
     if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
-        await plotChartWithBothTargets(plotDataUrl,red,blue,pointSize,lineSize);
+        await plotChartWithBothTargets(plotDataUrl);
         console.log("plot both")
     }
     else {
         if (target1RadioButtonChecked()) {//change to see if t1 checked
-            await plotChartBasedOnTargets(plotDataUrl, "T1",red,blue,pointSize,lineSize);
+            await plotChartBasedOnTargets(plotDataUrl, "T1");
             console.log("plot t1")
         }
         else {
-            await plotChartBasedOnTargets(plotDataUrl, "T2",red,blue,pointSize,lineSize);
+            await plotChartBasedOnTargets(plotDataUrl, "T2");
             console.log("plot t2")
         }
 
@@ -199,9 +210,10 @@ async function plotTransitonEditedGraphLineSize(lineSize) {
 
 }
 
-async function plotTransitionEditedGraphPointSize(pointSize) {
-    const red = "#FF0000";
-    const blue = "#0000FF";
+async function plotTransitionEditedGraphPointSize() {
+
+
+
     let plotDataUrl = await generatePlotDataQueryUrl();
   
     // if (chartElement.children.length > 0) {
@@ -213,16 +225,19 @@ async function plotTransitionEditedGraphPointSize(pointSize) {
 
 
     if (bothTargetsRadioButttonChecked()) {//change to see if both radio is checked
-        await plotChartWithBothTargets(plotDataUrl,red ,blue,pointSize);
+
+        
+        plotChartWithBothTargets(plotDataUrl);
+        
         console.log("plot both")
     }
     else {
         if (target1RadioButtonChecked()) {//change to see if t1 checked
-            await plotChartBasedOnTargets(plotDataUrl, "T1",red,blue,pointSize);
+            await plotChartBasedOnTargets(plotDataUrl, "T1");
             console.log("plot t1")
         }
         else {
-            await plotChartBasedOnTargets(plotDataUrl, "T2",red,blue,pointSize);
+            await plotChartBasedOnTargets(plotDataUrl, "T2");
             console.log("plot t2")
         }
 
@@ -386,7 +401,11 @@ function hideColorOptionT2() {
 
 
 //take out set time out and do it where we call it in the first place ()
-function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF",pointSize=10,lineSize = 1) {
+function plotChartWithBothTargets(requestUrl) {
+    let t1Color = document.querySelector("#t1-color-selector").value;
+    let t2Color = document.querySelector("#t2-color-selector").value;
+    let pointSize = parseInt(document.querySelector("#point-size-selector").value);
+    let lineSize = parseInt(document.querySelector("#line-size-selector").value);
 
     setTimeout(() => {
 
@@ -443,8 +462,11 @@ function plotChartWithBothTargets(requestUrl,t1Color="#FF0000",t2Color="#0000FF"
 
 
 
-function plotChartBasedOnTargets(requestUrl, target, t1Color = "#FF0000", t2Color = "#0000FF", pointSize = 10, lineSize = 1) {
-    //change the inside to handle one based on hte
+function plotChartBasedOnTargets(requestUrl, target) {
+    let t1Color = document.querySelector("#t1-color-selector").value;
+    let t2Color = document.querySelector("#t2-color-selector").value;
+    let pointSize = parseInt(document.querySelector("#point-size-selector").value);
+    let lineSize = parseInt(document.querySelector("#line-size-selector").value);
     
     setTimeout(() => {
     
@@ -546,9 +568,9 @@ function allPlottingInfoIsSelected() {
 
 
 // I'll either have to use .then sytax or set up a webpack environment
-async function plotTrasition() {
+async function plotTrasitionBothTargets(plotDataUrl) {
    
-    let plotDataUrl = await generatePlotDataQueryUrl();
+    
 
     await hideDashboardLogo();
    
@@ -564,24 +586,140 @@ async function plotTrasition() {
 
     await displayChartElement();
 
-    setTimeout(() => {displayPlotSettingsContainer()}, 2100);
+    setTimeout(() => {
+
+        displayPlotSettingsContainer();
+        revealBothTargetRadioButton();
+        revealT2TargetRadioButton();
+        revealTargetColorSelectorT2();
+        revealTargetT1RadioButton()
+        targetPlotRadioButtonBoth.checked = true;
+    
+    }, 2100);
     
 }
 
 
-plotButton.addEventListener('click', () => {
+async function plotTransitionSingleTarget(plotDataUrl) {
+    
+    await hideDashboardLogo();
+   
+    await closePlottingModal();
+
+    if (chartElement.children.length > 0) {
+        await hideChartElement();
+    }
+
+    await displayLoadingAnimation();
+
+    await plotChartBasedOnTargets(plotDataUrl, "T1");
+
+    await displayChartElement();
+
+    setTimeout(() => {
+
+        displayPlotSettingsContainer();
+        hideBothTargetRadioButton();
+        hideTargetT1RadioButton();
+        hideT2TargetRadioButton();
+        hideTargetColorSelectorT2();
+        targetPlotRadioButtonT1.checked = true;
+
+    
+    }, 2100);
+}
+
+
+function hasBothTargets(plotData) {
+
+    if (plotData.T2.length == 0 && plotData.percentagesMetT2.length == 0 && plotData.mostRecentT2Des == "") {
+
+        return false;
+    }
+
+    return true;
+}
+
+
+function hideBothTargetRadioButton() {
+
+    targetPlotOptionButtonBoth.style.display = "none";
+    
+}
+
+
+
+function revealBothTargetRadioButton() {
+    targetPlotOptionButtonBoth.style.display  = "block";
+}
+
+
+function hideTargetT1RadioButton() {
+    targetPlotOptionButtonT1.style.display = "none";
+}
+
+function revealTargetT1RadioButton() {
+    targetPlotOptionButtonT1.style.display = "block";
+}
+
+
+function hideT2TargetRadioButton() {
+
+    targetPlotOptionButtonT2.style.display = "none";
+
+}
+
+function revealT2TargetRadioButton() {
+    targetPlotOptionButtonT2.style.display = "block";
+}
+
+
+
+function hideTargetColorSelectorT2() {
+     targetPlotSelectorColorT2Option.style.display = "none";
+}
+
+function revealTargetColorSelectorT2() {
+    
+     targetPlotSelectorColorT1Option.style.display = "block";
+
+}
+
+
+plotButton.addEventListener('click', async () => {
+
     if (allPlottingInfoIsSelected()) {
+
+        let plotDataUrl = await generatePlotDataQueryUrl();
+
         
-        plotTrasition();
+
+        axios.get(plotDataUrl).then(response => {
+
+        let plottingDataObj = response.data;
+  
+        if (hasBothTargets(plottingDataObj)) {
+            
+            plotTrasitionBothTargets(plotDataUrl);
+
+        }
+        else {
+            
+            plotTransitionSingleTarget(plotDataUrl);
+        }
+        
+        
+    });
+        //if both targets, do the normal plot transition 
+        
+        //if only one target plot the only one target 
+
     }//handle the case to tell the user to make sure they selected everything.
 });
 
 
 targetPlotRadioButtonBoth.addEventListener('change', () => {
-    // plotTransitionEditedTargets();
-    let t1Color = targetPlotColorSelectorT1.value;
-    let t2Color = targetPlotColorSelectorT2.value;
-    plotTransitionEditedTargetColors(t1Color, t2Color);
+    plotTransitionEditedTargets();
     displayColorOptionT2();
     displayColorOptionT1();
 });
@@ -589,35 +727,28 @@ targetPlotRadioButtonBoth.addEventListener('change', () => {
 
 targetPlotRadioButtonT1.addEventListener('change', () => {
     // plotTransitionEditedTargets();
-    let t1Color = targetPlotColorSelectorT1.value;
-    let t2Color = targetPlotColorSelectorT2.value;
-    plotTransitionEditedTargetColors(t1Color, t2Color);
+    plotTransitionEditedTargets();
     hideColorOptionT2();
     displayColorOptionT1()
 });
 
 
 targetPlotRadioButtonT2.addEventListener('change', () => {
-    // plotTransitionEditedTargets();
-    let t1Color = targetPlotColorSelectorT1.value;
-    let t2Color = targetPlotColorSelectorT2.value;
-    plotTransitionEditedTargetColors(t1Color, t2Color);
+    plotTransitionEditedTargets();
+    // plotTransitionEditedTargetColors();
     hideColorOptionT1(); 
     displayColorOptionT2();
 });
 
 
 targetPlotColorSelectorT1.addEventListener('change', () => {
-    let t1Color = targetPlotColorSelectorT1.value;
-    let t2Color = targetPlotColorSelectorT2.value;
-    plotTransitionEditedTargetColors(t1Color, t2Color);
+    plotTransitionEditedTargetColors();
 });
 
 
 targetPlotColorSelectorT2.addEventListener('change',() => {
-    let t1Color = targetPlotColorSelectorT1.value;
-    let t2Color = targetPlotColorSelectorT2.value;
-    plotTransitionEditedTargetColors(t1Color, t2Color);
+
+    plotTransitionEditedTargetColors();
 });
 
 
@@ -625,7 +756,7 @@ targetPlotColorSelectorT2.addEventListener('change',() => {
 pointSizeSelector.addEventListener('change',() => {
     let pointSize = parseInt(pointSizeSelector.value);
     //plotTransitionfor point fucntion
-    plotTransitionEditedGraphPointSize(pointSize);
+    plotTransitionEditedGraphPointSize();
     
 });
 
@@ -633,11 +764,16 @@ pointSizeSelector.addEventListener('change',() => {
 lineSizeSelector.addEventListener('change',() => {
     let lineSize = parseInt(lineSizeSelector.value);
     //plotTransitionfor line fucntion
-    plotTransitonEditedGraphLineSize(lineSize);
+    plotTransitonEditedGraphLineSize();
 });
 
 
 
+
+
+
+// Exporting variables and functions
+export {loadingElement,clearloadingElement,displayLoadingAnimation,dashboardLogo,hideDashboardLogo};
 
 //plot query structure:
 // "https://visualization-practice-api.herokuapp.com/plot?slo=S1&measure=M1&start_date=18-19&end_date=20-21"

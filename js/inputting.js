@@ -1,7 +1,11 @@
+import { loadingElement, clearloadingElement, displayLoadingAnimation, dashboardLogo, hideDashboardLogo } from '/js/plotting.js'
+
+import {clearSLOSelector,clearInputMeasureSelector,clearInputTargetSelector,loadInputSloSelector} from '/js/inputModal.js';
+
 
 const saveButton = document.getElementById('data-input-button');
 const closeInputModalButton = document.querySelector("#dataInputModal > div > div > div.modal-footer > button.btn.btn-secondary");
-const dashboardLogo = document.getElementById('dashboard-logo');
+// const dashboardLogo = document.getElementById('dashboard-logo');
 
 const sloSelectorInputModal = document.querySelector("#SLO-selector-data");
 const measureSelectorInputModal = document.querySelector("#measure-selector-data");
@@ -13,6 +17,11 @@ const numberOfStudentsInputField = document.querySelector("#number-of-students-i
 const numberOfStudentsMetTargetInputField = document.querySelector("#number-of-students-met-input");
 const percentageOfStudentsMetTargetInputField = document.querySelector("#percentage-of-students-met-input");
 const resultTextBoxInputField = document.querySelector("#result-texbox");
+
+
+const confirmationMessageArea = document.querySelector("#confirmation-message-area");
+
+
 
 
 const inputFields = {
@@ -29,7 +38,133 @@ const inputFields = {
 //CHOOSE MEASURE SHOULD CLOSE TARGET 
 
 
+// write thing to clear all input 
 
+// function clearInputSectors(inputFields) {
+//     const selectors = [
+//         inputFields.sloSelector,
+//         inputFields.measureSelector,
+//         inputFields.targetSlector
+//     ];
+    
+//     for (let selector of selectors) {
+
+//         selector.options.selectedIndex[0];
+
+//     }
+// }
+
+
+function clearSelectorOptions() {
+    clearSLOSelector();
+    clearInputMeasureSelector();
+    clearInputTargetSelector();
+}
+
+function clearAllInputFieldData(inputFields) {
+    const targetAmountInputField = inputFields.targetAmountElement;
+    const numberOfStudentsInputField = inputFields.numberOfStudentsElement
+    const numberOfStudentsMetTargetInputField = inputFields.numberOfStudentsMetTargetElement;
+    const percentageOfStudentsMetTargetInputField = inputFields.percentageOfStudentMeTargetElement;
+    const resultInputField = inputFields.resultTextBoxElement;
+
+    targetAmountInputField.value = '';
+    numberOfStudentsInputField.value = '';
+    numberOfStudentsMetTargetInputField.value = '';
+    percentageOfStudentsMetTargetInputField.value = '';
+    resultInputField.value = '';
+    
+}
+
+function clearInputModalData(inputFields) {
+    
+    clearSelectorOptions();
+    clearAllInputFieldData(inputFields);
+    
+}
+
+
+function revealDashboardLogo() {
+    setTimeout(() => {
+        dashboardLogo.style.display = "block";
+
+    },2000)
+    
+}
+
+
+function revealConfirmationMessageArea() {
+    setTimeout(() => {
+        confirmationMessageArea.style.display = "grid"; 
+    },2300)
+    
+}
+
+function hideConfirmationMessageArea() {
+
+        confirmationMessageArea.style.display = "none";
+
+}
+
+
+
+function hideUnselectedSelectorError(selector) {
+
+    if (selector == null) return null;
+
+    selector.style.borderColor = "#0d6efd";
+
+    const parentNode = selector.parentElement;
+    const unfilledErrorContainer = parentNode.children[1];
+
+    unfilledErrorContainer.style.display = "none";
+    
+}
+
+
+
+function hideUnfilledTextFieldError(selector) {
+
+    if (selector == null) return null;
+
+    selector.style.borderColor = "#0d6efd";
+
+    const parentNode = selector.parentElement;
+    const unfilledErrorContainer = parentNode.children[2];
+
+    unfilledErrorContainer.style.display = "none";
+    
+}
+
+
+
+function hideInvalidTextFieldError(selector) {
+
+     if (selector == null) return null;
+
+    selector.style.borderColor = "#0d6efd";
+
+    const parentNode = selector.parentElement;
+
+    const invalidErrorContainer = parentNode.children[3];
+
+    invalidErrorContainer.style.display = "none";
+}
+
+
+
+function resetErrorDisplays(inputFields) {
+
+    // const unfilledSelectors = getAllUnfilledSelectors(inputFields);
+    const unfilledTextFields = getAllUnfilledTextFields(inputFields);
+    const invalidInputFields = getAllInvalidInputFields(inputFields);
+    
+
+    // unfilledSelectors.forEach(hideUnselectedSelectorError);
+    unfilledTextFields.forEach(hideUnfilledTextFieldError);
+    invalidInputFields.forEach(hideInvalidTextFieldError);
+    
+}
 
 
 function isNumeric(str) {
@@ -38,14 +173,19 @@ function isNumeric(str) {
          !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
+
+
 function clearDashboardLogo(dashboardLogoElement) {
    dashboardLogoElement.style.display = "none";
 }
 
 
+
 function closeInputModal(closeButton) {
     closeButton.click();
+    
 }
+
 
 
 function isBetweenInclusiveValues(number, lower, upper) {
@@ -54,13 +194,7 @@ function isBetweenInclusiveValues(number, lower, upper) {
     return false;
 }
 
-// function targetAmountIsValid(targetAmountValue) {
-//     if (isNumeric(targetAmountValue) && isBetweenInclusiveValues(targetAmountValue, 0, 100)) {
-//        return true; 
-//     }
 
-//     return false;
-// }
 
 function numericInputIsValid(text) {
 
@@ -72,12 +206,6 @@ function numericInputIsValid(text) {
 }
 
 
-// function percentageMetIsValid(percentage) {
-//     if (isNumeric(percentage) && isBetweenInclusiveValues(percentage, 0, 100)) {
-//        return true; 
-//     }
-//     return false;
-// }
 
 
 
@@ -153,6 +281,8 @@ function isEmptyString(string) {
     return false;
 }
 
+
+
 //change this to is valid
 function allInputFieldsHasValidInput(inputFields) {
 
@@ -196,10 +326,6 @@ function allTextInputFieldsFilled(inputFields) {
     const togglepercentageStudentsMetButtton = document.querySelector("#flexSwitchStudentPercentageCheck");
     
 
-    // if (targetAmountInputField == null || numberOfStudentsInputField == null || numberOfStudentsMetTargetInputField == null || percentageOfStudentsMetTargetInputField == null) {
-    //     return false;
-    // }
-    //if toggle if off 
     if (togglepercentageStudentsMetButtton.checked == false) {
         
     
@@ -223,8 +349,6 @@ function allTextInputFieldsFilled(inputFields) {
         
     }
 
-  
-
     
     return true;
 }
@@ -237,6 +361,8 @@ function allInputFieldsFilled(inputFields) {
 
     return false;
 }
+
+
 
 
 function getAllUnfilledSelectors(inputFields) {
@@ -265,6 +391,35 @@ function getAllUnfilledSelectors(inputFields) {
 
     return unfilledInputFields;
 }
+
+
+function getAllFilledSelectors(inputFields) {
+    
+    if (inputFields == null) {
+        return [];
+    }
+
+    const filledInputFields = [];
+    
+    const inputSelectors = [
+        inputFields.sloSelector,
+        inputFields.measureSelector,
+        inputFields.targetSlector
+    ];
+
+    for (let currSelector of inputSelectors) {
+        const defaultSelectorValue = currSelector.options[0].text;
+        const selectorValue = currSelector.options[currSelector.selectedIndex].text;
+            
+        if (defaultSelectorValue != selectorValue) {
+            filledInputFields.push(currSelector);
+        }
+
+    }
+
+    return filledInputFields;
+}
+
 
 
 function getAllUnfilledTextFields(inputFields) {
@@ -305,14 +460,51 @@ function getAllUnfilledTextFields(inputFields) {
     }
 
 
-    // const resultValue = resultInputField.value;
-
-    // if (resultValue == emptyString || resultValue .trim() == emptyString) {
-    //     unfilledInputFields.push(resultInputField);
-    // }
-
 
     return unfilledInputFields;
+}
+
+
+function getAllFilledTextFields(inputFields) {
+    
+    if (inputFields == null) {
+        return [];
+    }
+
+    const filledInputFields = [];
+    const emptyString = "";
+    const togglepercentageStudentsMetButtton = document.querySelector("#flexSwitchStudentPercentageCheck");
+    // const resultInputField = inputFields.resultTextBoxElement;
+    
+    const inputTextFields = (togglepercentageStudentsMetButtton.checked == false) ? [
+        inputFields.targetAmountElement,
+        inputFields.numberOfStudentsElement,
+        inputFields.numberOfStudentsMetTargetElement,
+        inputFields.resultTextBoxElement
+    ] : [
+        inputFields.targetAmountElement,
+        inputFields.percentageOfStudentMeTargetElement,
+        inputFields.resultTextBoxElement
+    ];
+
+
+
+
+
+    for (let currTextField of inputTextFields) {
+            console.log(currTextField)
+            const currTextFieldValue = currTextField.value;
+
+        if (currTextFieldValue != emptyString || currTextFieldValue.trim() != emptyString) {
+            
+            filledInputFields.push(currTextField);
+
+        }   
+    }
+
+
+
+    return filledInputFields;
 }
 
 
@@ -355,29 +547,32 @@ function showErrorUnfilledInputFields(inputFields) {
 
     unfilledSelectors.forEach(revealUnselectedSelectorError);
     unfilledTextFields.forEach(revealUnfilledInputFieldError);
+}
 
-    //************************* */
-    //iterate over them and reveal the div that says it is unfilled.
-    //change some of the context of the html so that we can tell
-    //which one is which so that we ccan have more descriptive erro messages
-    //for the ones that need them 
-    //make it so that we can find the error messagge div by using parent of and child node stuff .
-    //************************* */
+
+
+function hideErrorUnfilledInputFields(inputFields) {
+    
+    // const filledSelectors = getAllFilledSelectors(inputFields);
+    const filledTextFields = getAllFilledTextFields(inputFields);
+
+    
+    // filledSelectors.forEach(hideUnselectedSelectorError);
+    filledTextFields.forEach(hideUnfilledTextFieldError);
+
+}
+
+function hideErrorInvalidInputFields(inputFields) {
+    
+    const invalidInputFields = getAllValidInputFields(inputFields);
+
+    invalidInputFields.forEach(hideInvalidTextFieldError);
+    
 }
 
 
 
 
-///FIX THIS 
-
-// function allInputFieldsHasValidInput(inputFields) { 
-
-//     if (!allNumericalInputFieldsFilled(inputFields)) return false;
-
-//     if (resultTextBoxValue == emptyString || resultTextBox.value.trim() == emptyString || resultTextBox == null) return false;
-
-//     return true;
-// }
 
 
 function getAllInvalidInputFields(inputFields) {
@@ -393,14 +588,13 @@ function getAllInvalidInputFields(inputFields) {
         inputFields.targetAmountElement,
         inputFields.numberOfStudentsElement,
         inputFields.numberOfStudentsMetTargetElement,
-        inputFields.resultTextBoxElement
     ] : [
         inputFields.targetAmountElement,
         inputFields.percentageOfStudentMeTargetElement,
-        inputFields.resultTextBoxElement
+
     ];
 
-
+//        inputFields.resultTextBoxElement
 
     for (let currNumericTextField of numericTextFields) {
 
@@ -418,6 +612,47 @@ function getAllInvalidInputFields(inputFields) {
     }
 
     return invalidInputFields;
+
+}
+
+
+function getAllValidInputFields(inputFields) {
+    
+    if (inputFields == null) {
+        return [];
+    }
+
+    const validInputFields = [];
+    const togglepercentageStudentsMetButtton = document.querySelector("#flexSwitchStudentPercentageCheck");
+    
+    const numericTextFields = (togglepercentageStudentsMetButtton.checked == false) ? [
+        inputFields.targetAmountElement,
+        inputFields.numberOfStudentsElement,
+        inputFields.numberOfStudentsMetTargetElement,
+    ] : [
+        inputFields.targetAmountElement,
+        inputFields.percentageOfStudentMeTargetElement,
+
+    ];
+
+//        inputFields.resultTextBoxElement
+
+    for (let currNumericTextField of numericTextFields) {
+
+        const currNumericTextFieldValue = currNumericTextField.value;
+
+        if (!isEmptyString(currNumericTextFieldValue)) {
+
+            if (numericInputIsValid(currNumericTextFieldValue)) {
+
+                validInputFields.push(currNumericTextField);
+            }
+            
+        }
+
+    }
+
+    return validInputFields;
 
 }
 
@@ -443,13 +678,7 @@ function showErrorInvalidInputFields(inputFields) {
 
     const invalidInputFields = getAllInvalidInputFields(inputFields);
     invalidInputFields.forEach(revealInvalidInputFields);
-        //************************* */
-    //iterate over them and reveal the div that says it is unfilled.
-    //change some of the context of the html so that we can tell
-    //which one is which so that we ccan have more descriptive erro messages
-    //for the ones that need them
-    //make it so that we can find the error messagge div by using parent of and child node stuff .
-    //************************* */
+
 }
 
 
@@ -459,23 +688,13 @@ function showErrorInvalidInputFields(inputFields) {
 //togggle the error messages that would be great.
 //seperating them would also make the most sense , so one for unfilled and one for invalid
 
+
+
+
 function saveTransition(inputFields) {
 
     // console.log(`All inputt fields filled value ${allInputFieldsFilled(inputFields)}`)
     // console.log(`All inputt fields valid input value ${allInputFieldsHasValidInput(inputFields)}`)
-
-    if (allInputFieldsFilled(inputFields) && allInputFieldsHasValidInput(inputFields)) {
-        // console.log("all input is valid!!!!")
-        //save the values using api
-
-    }
-    else {
-
-        showErrorUnfilledInputFields(inputFields);
-        showErrorInvalidInputFields(inputFields);
-
-    }
-
 
 }
 
@@ -483,14 +702,62 @@ function saveTransition(inputFields) {
 
 
 
-saveButton.addEventListener("click", () => {
+
+
+closeInputModalButton.addEventListener("click", () => {
+    resetErrorDisplays(inputFields);
+    closeInputModal(closeInputModalButton);
+    clearInputModalData(inputFields);
+    
+});
+
+
+
+
+
+
+
+
+
+saveButton.addEventListener("click", async () => {
     // clearDashboardLogo(dashboardLogo);
     // closeInputModal(closeInputModalButton);
     // have to make a confirmation modal pop up
 
+    if (allInputFieldsFilled(inputFields) && allInputFieldsHasValidInput(inputFields))  {
+        console.log("Save Stuff, cause everything is valid!");
+        await closeInputModal(closeInputModalButton);
+        await hideDashboardLogo();
+        await displayLoadingAnimation();
+        await revealConfirmationMessageArea();
 
+        setTimeout(async () => {
+            await hideConfirmationMessageArea();
+            await displayLoadingAnimation();
+            await revealDashboardLogo();
+            await clearInputModalData(inputFields);
+            await loadInputSloSelector();
+        }, 5200);
+       
+    
+        
+        //save based on diffrerent criteria. 
+        // 1. Save a t1  (add a new t1, if they are not exsisting)
+        // 2. edit either t1 or t2 if they are exsisting
+        // 3. add a new t2 (there is an exisiting t1 but no t2)
 
-    saveTransition(inputFields);
+    }
+    else {
+
+        hideErrorUnfilledInputFields(inputFields);
+        hideErrorInvalidInputFields(inputFields);
+        showErrorUnfilledInputFields(inputFields);
+        showErrorInvalidInputFields(inputFields);
+        
+
+    }       
+
+    // saveTransition(inputFields);
     //showErrorUnfilledInputFields(inputFields);
     // showErrorInvalidInputFields(inputFields);
 });

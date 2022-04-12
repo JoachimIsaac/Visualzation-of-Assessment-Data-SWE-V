@@ -1,3 +1,4 @@
+import { dashboardLogo } from "./plotting";
 
 const allSloURL = 'https://visualization-practice-api.herokuapp.com/slo/all';
 
@@ -18,6 +19,21 @@ const modalInputSloDescriptionTextBox = document.getElementById('modal-SLO-descr
 const moadalInputMeasureDescriptionTextbox = document.getElementById('modal-measure-description-data');
 
 
+
+
+
+function hideUnselectedSelectorError(selector) {
+
+    if (selector == null) return null;
+
+    selector.style.borderColor = "#0d6efd";
+
+    const parentNode = selector.parentElement;
+    const unfilledErrorContainer = parentNode.children[1];
+
+    unfilledErrorContainer.style.display = "none";
+    
+}
 
 
 studentPecentageCheckSwitch.addEventListener('change', () => {
@@ -93,14 +109,26 @@ function loadInputAcademicTermTag() {
 }
 
 
+function clearSLOSelector() {
+    modalInputSloSelector.textContent = null;
+    let tempOption = document.createElement('option');
+    tempOption.value = 0;
+    tempOption.textContent = "Choose SLO";
+    
+    modalInputSloSelector.appendChild(tempOption);
+    modalInputSloDescriptionContainer.style.display = "none";
+    tempOption.disabled = true;
+}
+
 
 function clearInputMeasureSelector() {
     modalInputMeasureSelector.textContent = null;
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose Measure";
-    tempOption.disabled = true;
     modalInputMeasureSelector.appendChild(tempOption);
+    modalInputMeasureDescriptionContainer.style.display = "none";
+    tempOption.disabled = true;
 }
 
 
@@ -147,8 +175,9 @@ function loadMeasureDescriptionData(selectedSlo, selectedMeasure) {
 modalInputSloSelector.addEventListener('change',() => {
     clearInputMeasureSelector();
     clearInputTargetSelector();
+    hideUnselectedSelectorError(modalInputSloSelector);
     
-    modalInputMeasureDescriptionContainer.style.display = "none";
+    
 
    let selectedSlo = modalInputSloSelector.options[modalInputSloSelector.selectedIndex].textContent;
 
@@ -179,6 +208,8 @@ modalInputSloSelector.addEventListener('change',() => {
 modalInputMeasureSelector.addEventListener('change',() => {
 
     clearInputTargetSelector();
+    hideUnselectedSelectorError(modalInputMeasureSelector);
+    
     // modalInputMeasureDescriptionContainer.style.display = "none";
 
     let selectedSlo = modalInputSloSelector.options[modalInputSloSelector.selectedIndex].textContent;
@@ -209,8 +240,18 @@ modalInputMeasureSelector.addEventListener('change',() => {
     }
 });
 
+modalInputTargetSelector.addEventListener('change', () => {
+        hideUnselectedSelectorError(modalInputTargetSelector);
+
+
+})
+
+
 
 window.addEventListener("load", function () {
   loadInputAcademicTermTag();
   loadInputSloSelector();
 });
+
+
+export {clearSLOSelector,clearInputMeasureSelector,clearInputTargetSelector,loadInputSloSelector};

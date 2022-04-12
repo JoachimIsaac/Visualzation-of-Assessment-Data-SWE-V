@@ -11,34 +11,33 @@ body{
     display: inline-block;
     background-color: #1a8cff;
 
-    // margin-bottom: 50px;
     .container{
     
-    .navbar-logo{
-        padding: 5px;
-        margin-bottom: 0;
+        .navbar-logo{
+            padding: 5px;
+            margin-bottom: 0;
 
-        img{
-        width: 45px;
-        height: 45px;
-        border-radius: 40%;
-        border: 4px solid lightgrey;
-        transition: all ease-in-out 0.3s;
+            img{
+            width: 45px;
+            height: 45px;
+            border-radius: 40%;
+            border: 4px solid lightgrey;
+            transition: all ease-in-out 0.3s;
+            }
+        }
+
+        .navbar-logo:hover{
+
+            padding: 5px;
+            margin-bottom: 0;
+
+            img{
+            width: 45px;
+            height: 45px;
+            border-radius: 40%;
+            border: 4px solid yellow;
         }
     }
-
-     .navbar-logo:hover{
-
-        padding: 5px;
-        margin-bottom: 0;
-
-        img{
-        width: 45px;
-        height: 45px;
-        border-radius: 40%;
-        border: 4px solid yellow;
-        }
-     }
 
 
     button{
@@ -51,6 +50,7 @@ body{
         margin-right: 15px;
         border: 4px solid yellow;
     }
+
 
     .options-area{
         .navbar-nav{
@@ -69,7 +69,7 @@ body{
            }
 
         }
-    }
+      }
    }
 }
 
@@ -182,3 +182,26 @@ height: 1.2rem;
     
 }
 
+#confirmation-message-area{
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+}
+
+#confirmation-message-area > h1{
+    font-size: 5.5rem;
+    display: flex;
+    color: #1a8cff;
+    justify-content: center;
+}
+
+#confirmation-message{
+    font-size: 20px;
+    font-family: monospace;
+}
+
+// #confirmation-message > h1 > i{
+
+//    font-size: 5rem;
+//    color: #1a8cff;
+// }

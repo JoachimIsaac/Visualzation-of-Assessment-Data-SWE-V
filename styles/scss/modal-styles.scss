@@ -5,30 +5,29 @@
   padding: 1rem;
   display: flex;
   justify-items: center;
-
   align-content: center;
 
   form{
-      width: 100%;
-    //   text-align: center;
-    //   display: flex;
+
+    width: 100%;
+
 
    .mb-3{
         justify-content:center;
         margin-bottom: .5rem !important;
     }
 
+
     .input-selector{
         justify-content:center;
     }
+
 
     .description-container{
         display: flex;
         justify-content: center;
         margin-bottom: .8rem;
-        margin-top: .3rem;
-
-        
+        margin-top: .3rem;   
     }
 
   }
@@ -44,15 +43,12 @@
   padding: .375rem .75rem;
   font-size: 1rem;
   font-weight: 400;
-//   line-height: 1.5;
   color: #212529;
   text-align: center;
   white-space: nowrap;
   background-color: transparent;
   border: 1px solid white;
-//   border-radius: .75rem;
-//   margin-right: .1rem;
-    font-weight: 700;
+  font-weight: 700;
 }
 
 
@@ -68,7 +64,6 @@
     border-radius: .75rem;
     border: 1px solid #0d6efd;
     padding: 8px;
-    // margin-right: 10px;
     width: 80%;
     text-align: center;
     font-weight: 700;
@@ -77,7 +72,6 @@
 
 #modal-SLO-description-plt{
     border-radius: .75rem;
-    // border: 1px solid #0d6efd;
     width: 80%;
     height: 50px;
     margin-bottom: .2rem;
@@ -89,19 +83,18 @@
     border-radius: .75rem;
     border: 1px solid #0d6efd;
     padding: 8px;
-    //  margin-right: 10px;
      width: 80%;
     text-align: center;
     font-weight: 700;
 }
 
+
 #modal-measure-description-plt{
     border-radius: .75rem;
-    // border: 1px solid #0d6efd;
     width: 80%;
-    height: 50px;
-     
+    height: 50px;    
 }
+
 
 #start-selector-plt{
     border-radius: .75rem;
@@ -111,6 +104,7 @@
     text-align: center;
     font-weight: 700;
 }
+
 
 #end-selector-plt{
      border-radius: .75rem;
@@ -155,13 +149,11 @@
 
 #modal-SLO-description-data{
     border-radius: .75rem;
-    // border: 1px solid #0d6efd;
     width: 80% !important;
 }
 
 #modal-measure-description-data{
     border-radius: .75rem;
-    // border: 1px solid #0d6efd;
     width: 80%;
     height: 30px;
 }
@@ -252,7 +244,6 @@
 
 #modal-SLO-description-data{
     border-radius: .75rem;
-    // border: 1px solid #0d6efd;
     width: 100%;
     height: 30px;
 
