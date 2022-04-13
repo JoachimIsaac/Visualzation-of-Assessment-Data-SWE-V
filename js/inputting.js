@@ -1,6 +1,6 @@
 import { loadingElement, clearloadingElement, displayLoadingAnimation, dashboardLogo, hideDashboardLogo } from '/js/plotting.js'
 
-import {clearSLOSelector,clearInputMeasureSelector,clearInputTargetSelector,loadInputSloSelector} from '/js/inputModal.js';
+import {clearInputSloSelector,clearInputMeasureSelector,clearInputTargetSelector,loadInputSloSelector} from '/js/inputModal.js';
 
 
 const saveButton = document.getElementById('data-input-button');
@@ -56,7 +56,7 @@ const inputFields = {
 
 
 function clearSelectorOptions() {
-    clearSLOSelector();
+    clearInputSloSelector();
     clearInputMeasureSelector();
     clearInputTargetSelector();
 }

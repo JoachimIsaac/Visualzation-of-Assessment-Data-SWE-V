@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
+// import { defineConfig } from 'vitest/config';
     
     export default defineConfig({
       server: {
@@ -7,7 +8,7 @@ import { defineConfig } from 'vite'
 
       hostname:"localhost"
     }
-  },
+      },
       css: {
         preprocessorOptions: {
             scss: {

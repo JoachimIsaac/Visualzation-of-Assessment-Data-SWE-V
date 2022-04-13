@@ -1,7 +1,9 @@
+
+
 const allSloURL = 'https://visualization-practice-api.herokuapp.com/slo/all';
 
 
-////////////////////////////////Plot modalSelector elements////////////////////////
+////////////////////////////////Plot Modal Selector Elements////////////////////////
 const modalPlotSloSelector = document.getElementById('SLO-selector-plt');
 const modalPlotMeasureSelector = document.getElementById('measure-selector-plt');
 const modalPlotStartDateSelector = document.getElementById('start-selector-plt');
@@ -34,7 +36,7 @@ function addOptionToSelectorElement(contents, count, selectorElement) {
 
 
 //Loads Selector with all current SLO Values.
-function loadSloSelector(allSloURL) {
+function loadSloSelector(allSloURL,sloSelector) {
 
     axios.get(allSloURL).then(response => {
 
@@ -43,7 +45,7 @@ function loadSloSelector(allSloURL) {
 
         slos.forEach((slo) => {
 
-            addOptionToSelectorElement(slo, count, modalPlotSloSelector);
+            addOptionToSelectorElement(slo, count, sloSelector);
             count += 1;  
 
         });
@@ -60,8 +62,9 @@ function loadSloSelector(allSloURL) {
 
 
 
-
-function loadMeasureSelector(measureUrl) {
+//pass to input modal
+//Loads measure selector with measures bases on url (endpoint)
+function loadMeasureSelector(measureUrl,measureSelector) {
 
     axios.get(measureUrl).then(response => {
 
@@ -74,13 +77,13 @@ function loadMeasureSelector(measureUrl) {
                 
                 if (measure != "description") {
 
-                    addOptionToSelectorElement(measure, count, modalPlotMeasureSelector);
+                    addOptionToSelectorElement(measure, count, measureSelector);
                     count += 1;
                 }
 
             });
 
-            modalPlotMeasureSelector.selectedIndex = 0;
+            measureSelector.selectedIndex = 0;
         }
     }).catch((error) => {
 
@@ -106,8 +109,9 @@ function loadStartDateSelector(startDatesUrl) {
                     
                 addOptionToSelectorElement(date, count, modalPlotStartDateSelector);
                 count += 1;
-
             });
+
+
             
         }
 
@@ -149,15 +153,15 @@ function loadEndDateSelector(endDatesUrl) {
 
 
 //Loads SLO description textbox.
-function loadSloDescriptionSlo(selectedSlo) {
+function loadSloDescription(selectedSlo,sloDescriptionTextbox,sloDescriptionContainer) {
 
     let sloDescriptionUrl = `https://visualization-practice-api.herokuapp.com/slo/description/${selectedSlo}`;
 
     axios.get(sloDescriptionUrl).then(response => { 
 
-        modalPlotSloDescriptionTextbox.value = `SLO Description: ${response.data}`;
-        modalPlotSloDescriptionTextbox.style.height = "auto";
-        modalPlotSloDescriptionContainer.style.display = "flex";
+        sloDescriptionTextbox.value = `SLO Description: ${response.data}`;
+        sloDescriptionTextbox.style.height = "auto";
+        sloDescriptionContainer.style.display = "flex";
         
     }).catch((error) => {
 
@@ -172,16 +176,16 @@ function loadSloDescriptionSlo(selectedSlo) {
 
 
 //Loads Measure Description textbox
-function loadMeasureDescriptionSlo(selectedSlo, selectedMeasure) {
+function loadMeasureDescription(selectedSlo, selectedMeasure,measureDescriptionTextbox, measureDescriptionContainer) {
     
     let measureDescriptionUrl = `https://visualization-practice-api.herokuapp.com/measure/description/${selectedSlo}/${selectedMeasure}`;
 
   
     axios.get(measureDescriptionUrl).then(response => {
             
-        modalPlotMeasureDescriptionTextbox.value = `Measure Description: ${response.data}`;
-        modalPlotMeasureDescriptionTextbox.style.height = "auto";
-        modalPlotMeasureDescriptionContainer.style.display = "flex";
+        measureDescriptionTextbox.value = `Measure Description: ${response.data}`;
+        measureDescriptionTextbox.style.height = "auto";
+        measureDescriptionContainer.style.display = "flex";
 
     }).catch((error) => {
 
@@ -257,8 +261,8 @@ modalPlotSloSelector.addEventListener('change', () => {
     
     modalPlotMeasureDescriptionContainer.style.display = "none";
 
-    loadMeasureSelector(measureUrl);
-    loadSloDescriptionSlo(currentSelectedSlo);
+    loadMeasureSelector(measureUrl,modalPlotMeasureSelector);
+    loadSloDescription(currentSelectedSlo,modalPlotSloDescriptionTextbox,modalPlotSloDescriptionContainer);
 });
 
 
@@ -282,7 +286,11 @@ modalPlotMeasureSelector.addEventListener('change', () => {
         //Make a get start date function?
        
         loadStartDateSelector(startDatesUrl);
-        loadMeasureDescriptionSlo(currentSelectedSlo, selectedMeasure);
+
+        modalPlotStartDateSelector.selectedIndex = 0;
+        modalPlotStartDateSelector.options[0].setAttribute("disabled", "disabled");
+
+        loadMeasureDescription(currentSelectedSlo, selectedMeasure,modalPlotMeasureDescriptionTextbox,modalPlotMeasureDescriptionContainer);
         
     }
 
@@ -306,8 +314,10 @@ modalPlotStartDateSelector.addEventListener('change', () => {
 
         const endDatesUrl = `https://visualization-practice-api.herokuapp.com/startdate/${currentSelectedSlo}/${selectedMeasure}?start=${selectedStartDate}`;
 
-        //make a load end date selector
+        
         loadEndDateSelector(endDatesUrl);
+        modalPlotEndDateSelector.selectedIndex = 0;
+        modalPlotEndDateSelector.options[0].setAttribute("disabled", "disabled");
        
     }
 });
@@ -317,22 +327,19 @@ modalPlotStartDateSelector.addEventListener('change', () => {
 //Window onLoad event listener
 window.addEventListener("load", () => {
 
-    loadSloSelector(allSloURL);
+    loadSloSelector(allSloURL,modalPlotSloSelector);
 
 });
 
 
 
-//test
-//Gets the response for 400 type errors 
+
+// Gets the response for 400 type errors 
 function getErrorResponse400(code) {
 
     let message = '';
     
-    if (code < 400 || code > 500) {
-        return message;
-    }
-    else if (code == 400) {
+    if (code == 400) {
         message = `400 Bad Request – client sent an invalid request, such as lacking required request body or parameter`;
     }
     else if (code == 401) {
@@ -353,20 +360,17 @@ function getErrorResponse400(code) {
 
 
 
-//test
+//Gets response for 500 type errors 
 function getErrorResponse500(code) {
     
     let message = '';
     
-    if (code < 500 || code > 600) {
-        return message;
-    }
-    else if (code == 500) {
+    if (code == 500) {
 
         message = `500 Internal Server Error – a generic error occurred on the server`;
 
     }
-    else if (coder == 503) {
+    else if (code == 503) {
         
         message = `503 Service Unavailable – the requested service is not available`;
 
@@ -377,7 +381,7 @@ function getErrorResponse500(code) {
 }
 
 
-
+//Check is response is an identifiable 400 error.
 function isValid400Error(code) {
 
     if ((code == 400) || (code == 401) || (code == 403) || (code == 404) || (code == 412)) {
@@ -388,10 +392,10 @@ function isValid400Error(code) {
 }
 
 
-//test
+//Check is response is an identifiable 500 error.
 function isValid500Error(code) {
     
-    if ((code == 500) || (coder == 503)) {
+    if ((code == 500) || (code == 503)) {
         
         return true;
     }
@@ -401,19 +405,22 @@ function isValid500Error(code) {
 
 
 
-//test
+//Alerts user if there is a request error.
 function alertUserOnApiCallError(status, genericMessage) {
     
     if (isValid400Error(status)) {
             const message400 = getErrorResponse400(status);
             alert(message400);
         }
-        else if (isValid500Error(status)) {
+    else if (isValid500Error(status)) {
             const message500 = getErrorResponse500(status);
             alert(message500);
         }
-        else {
+    else {
             alert(`${genericMessage}`);
     }
 
 }
+
+
+export { addOptionToSelectorElement, loadSloSelector,loadMeasureSelector,loadSloDescription,loadMeasureDescription};
