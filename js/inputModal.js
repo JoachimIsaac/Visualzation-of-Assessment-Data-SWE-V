@@ -297,7 +297,7 @@ studentPecentageCheckSwitch.addEventListener('change', () => {
 
 
 //OnLoad event, loads SLO selector and the academic term tag.
-window.addEventListener("load", function () {
+window.addEventListener("load",  ()=> {
   loadAcademicTermTag(modalInputAcademicTermTag);
   loadInputSloSelector(allSloURL);
 });
@@ -306,4 +306,4 @@ window.addEventListener("load", function () {
 
 
 
-export {clearInputSloSelector,clearInputMeasureSelector,clearInputTargetSelector,loadInputSloSelector};
+export {clearInputSloSelector,modalInputSloSelector,clearInputMeasureSelector,modalInputMeasureSelector,clearInputTargetSelector,modalInputTargetSelector,loadInputSloSelector,allSloURL};

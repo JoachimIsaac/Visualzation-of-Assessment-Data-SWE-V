@@ -1,4 +1,4 @@
-
+import { hideUnselectedSelectorError} from '/js/inputting.js';
 
 const allSloURL = 'https://visualization-practice-api.herokuapp.com/slo/all';
 
@@ -23,7 +23,7 @@ const modalPlotMeasureDescriptionTextbox = document.getElementById('modal-measur
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-
+//Adds option to slector element i.e (SLO, Measure or Start date Slectors).
 function addOptionToSelectorElement(contents, count, selectorElement) {
     
     let tempOption = document.createElement('option');
@@ -33,6 +33,7 @@ function addOptionToSelectorElement(contents, count, selectorElement) {
     selectorElement.appendChild(tempOption);
 
 }
+
 
 
 //Loads Selector with all current SLO Values.
@@ -57,7 +58,7 @@ function loadSloSelector(allSloURL,sloSelector) {
         alertUserOnApiCallError(status, genericMessage);
 
     });
-
+    
 }
 
 
@@ -251,6 +252,8 @@ function clearPlotEndDateSelector(modalPlotEndDateSelector) {
 //Plot modal SLO selector event listener.
 modalPlotSloSelector.addEventListener('change', () => {
 
+    hideUnselectedSelectorError(modalPlotSloSelector);
+
     const currentSelectedSlo = modalPlotSloSelector.options[modalPlotSloSelector.selectedIndex].textContent;
 
     const measureUrl = `https://visualization-practice-api.herokuapp.com/measure/${currentSelectedSlo}`;
@@ -271,7 +274,8 @@ modalPlotSloSelector.addEventListener('change', () => {
 
 //Plot modal measure selector event listener.
 modalPlotMeasureSelector.addEventListener('change', () => {
-    
+
+    hideUnselectedSelectorError(modalPlotMeasureSelector);
     clearPlotStartDateSelector(modalPlotStartDateSelector);
     clearPlotEndDateSelector(modalPlotEndDateSelector);
 
@@ -301,6 +305,8 @@ modalPlotMeasureSelector.addEventListener('change', () => {
 //Plot modal start date selector event listener.
 modalPlotStartDateSelector.addEventListener('change', () => {
 
+    hideUnselectedSelectorError(modalPlotStartDateSelector);
+
     clearPlotEndDateSelector(modalPlotEndDateSelector);
 
     const selectedStartDate = modalPlotStartDateSelector.options[modalPlotStartDateSelector.selectedIndex].textContent;
@@ -322,6 +328,11 @@ modalPlotStartDateSelector.addEventListener('change', () => {
     }
 });
 
+
+modalPlotEndDateSelector.addEventListener('change',() => {
+    hideUnselectedSelectorError(modalPlotEndDateSelector);
+    
+});
 
 
 //Window onLoad event listener

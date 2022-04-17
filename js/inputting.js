@@ -1,11 +1,11 @@
-import { loadingElement, clearloadingElement, displayLoadingAnimation, dashboardLogo, hideDashboardLogo } from '/js/plotting.js'
+import { loadingElement, displayLoadingAnimation, dashboardLogo, hideDashboardLogo } from '/js/plotting.js'
 
-import {clearInputSloSelector,clearInputMeasureSelector,clearInputTargetSelector,loadInputSloSelector} from '/js/inputModal.js';
+import {clearInputSloSelector,modalInputSloSelector,clearInputMeasureSelector,modalInputMeasureSelector,clearInputTargetSelector,modalInputTargetSelector,loadInputSloSelector,allSloURL} from '/js/inputModal.js';
 
 
 const saveButton = document.getElementById('data-input-button');
 const closeInputModalButton = document.querySelector("#dataInputModal > div > div > div.modal-footer > button.btn.btn-secondary");
-// const dashboardLogo = document.getElementById('dashboard-logo');
+
 
 const sloSelectorInputModal = document.querySelector("#SLO-selector-data");
 const measureSelectorInputModal = document.querySelector("#measure-selector-data");
@@ -56,12 +56,18 @@ const inputFields = {
 
 
 function clearSelectorOptions() {
-    clearInputSloSelector();
-    clearInputMeasureSelector();
-    clearInputTargetSelector();
+
+    clearInputSloSelector(modalInputSloSelector);
+    clearInputMeasureSelector(modalInputMeasureSelector);
+    clearInputTargetSelector(modalInputTargetSelector);
+
 }
 
+
+
+
 function clearAllInputFieldData(inputFields) {
+
     const targetAmountInputField = inputFields.targetAmountElement;
     const numberOfStudentsInputField = inputFields.numberOfStudentsElement
     const numberOfStudentsMetTargetInputField = inputFields.numberOfStudentsMetTargetElement;
@@ -76,12 +82,18 @@ function clearAllInputFieldData(inputFields) {
     
 }
 
+
+
+
 function clearInputModalData(inputFields) {
     
     clearSelectorOptions();
     clearAllInputFieldData(inputFields);
     
 }
+
+
+
 
 
 function revealDashboardLogo() {
@@ -93,6 +105,8 @@ function revealDashboardLogo() {
 }
 
 
+
+
 function revealConfirmationMessageArea() {
     setTimeout(() => {
         confirmationMessageArea.style.display = "grid"; 
@@ -100,11 +114,16 @@ function revealConfirmationMessageArea() {
     
 }
 
+
+
+
 function hideConfirmationMessageArea() {
 
         confirmationMessageArea.style.display = "none";
 
 }
+
+
 
 
 
@@ -123,6 +142,7 @@ function hideUnselectedSelectorError(selector) {
 
 
 
+
 function hideUnfilledTextFieldError(selector) {
 
     if (selector == null) return null;
@@ -135,6 +155,7 @@ function hideUnfilledTextFieldError(selector) {
     unfilledErrorContainer.style.display = "none";
     
 }
+
 
 
 
@@ -153,20 +174,24 @@ function hideInvalidTextFieldError(selector) {
 
 
 
+
+
+
 function resetErrorDisplays(inputFields) {
 
-    // const unfilledSelectors = getAllUnfilledSelectors(inputFields);
+    
     const unfilledTextFields = getAllUnfilledTextFields(inputFields);
     const invalidInputFields = getAllInvalidInputFields(inputFields);
-    
 
-    // unfilledSelectors.forEach(hideUnselectedSelectorError);
     unfilledTextFields.forEach(hideUnfilledTextFieldError);
     invalidInputFields.forEach(hideInvalidTextFieldError);
     
 }
 
 
+
+
+//test
 function isNumeric(str) {
   if (typeof str != "string") return false // we only process strings!  
   return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
@@ -175,9 +200,13 @@ function isNumeric(str) {
 
 
 
+
+//not using could remove 
 function clearDashboardLogo(dashboardLogoElement) {
    dashboardLogoElement.style.display = "none";
 }
+
+
 
 
 
@@ -188,6 +217,8 @@ function closeInputModal(closeButton) {
 
 
 
+
+//test
 function isBetweenInclusiveValues(number, lower, upper) {
     if (number >= lower && number <= upper) return true;
 
@@ -196,6 +227,8 @@ function isBetweenInclusiveValues(number, lower, upper) {
 
 
 
+
+//test 
 function numericInputIsValid(text) {
 
     if (isNumeric(text) && isBetweenInclusiveValues(text, 0, 100)) {
@@ -209,7 +242,8 @@ function numericInputIsValid(text) {
 
 
 
- //need to error check
+ //May remove these since I never used them and just accessing the value attribute should need a function , even if we care
+ //so much a bout modularity.
 function getTargetAmount(targetAmountInputField) {
    
     return targetAmountInputField.value; 
@@ -217,7 +251,9 @@ function getTargetAmount(targetAmountInputField) {
 }
 
 
- //need to error check
+
+
+ //May remove these since I never used them and just accessing the value attribute
 function getNumberOfStudents(numberOfStudentsInputField) {
 
     return numberOfStudentsInputField.value;
@@ -225,13 +261,15 @@ function getNumberOfStudents(numberOfStudentsInputField) {
 }
 
 
- //need to error check
+//May remove these since I never used them and just accessing the value attribute
 function getNumberOfStudentsMetTarget(numberOfStudentsMetTargetInputField){
 
     return numberOfStudentsMetTargetInputField.value;
 
 }
 
+
+//May remove these since I never used them and just accessing the value attribute
 function getPercentageOfStudentsMetTarget(percentageOfStudentsMetTargetInputField){
 
     return percentageOfStudentsMetTargetInputField.value;
@@ -239,7 +277,7 @@ function getPercentageOfStudentsMetTarget(percentageOfStudentsMetTargetInputFiel
 }
 
 
- //need to error check
+//May remove these since I never used them and just accessing the value attribute
 function getResult(resultTextBox){
 
     return resultTextBox.value;
@@ -269,6 +307,8 @@ function allInputSelectorsSelected(inputFields) {
 
     return true;
 }
+
+
 
 
 function isEmptyString(string) {
@@ -315,7 +355,7 @@ function allInputFieldsHasValidInput(inputFields) {
 
 
 
-// ignore all 
+
 
 function allTextInputFieldsFilled(inputFields) {
     const targetAmountInputField = inputFields.targetAmountElement;
@@ -355,12 +395,16 @@ function allTextInputFieldsFilled(inputFields) {
 
 
 
+
+
 function allInputFieldsFilled(inputFields) {
 
     if (allInputSelectorsSelected(inputFields) && allTextInputFieldsFilled(inputFields)) return true;
 
     return false;
 }
+
+
 
 
 
@@ -393,6 +437,8 @@ function getAllUnfilledSelectors(inputFields) {
 }
 
 
+
+
 function getAllFilledSelectors(inputFields) {
     
     if (inputFields == null) {
@@ -422,6 +468,8 @@ function getAllFilledSelectors(inputFields) {
 
 
 
+
+
 function getAllUnfilledTextFields(inputFields) {
     
     if (inputFields == null) {
@@ -431,7 +479,7 @@ function getAllUnfilledTextFields(inputFields) {
     const unfilledInputFields = [];
     const emptyString = "";
     const togglepercentageStudentsMetButtton = document.querySelector("#flexSwitchStudentPercentageCheck");
-    // const resultInputField = inputFields.resultTextBoxElement;
+
     
     const inputTextFields = (togglepercentageStudentsMetButtton.checked == false) ? [
         inputFields.targetAmountElement,
@@ -508,6 +556,9 @@ function getAllFilledTextFields(inputFields) {
 }
 
 
+
+
+
 function revealUnselectedSelectorError(selector) {
 
     if (selector == null) return null;
@@ -520,6 +571,9 @@ function revealUnselectedSelectorError(selector) {
     unfilledErrorContainer.style.display = "flex";
 
 }
+
+
+
 
 
 function revealUnfilledInputFieldError(inputField) {
@@ -690,7 +744,7 @@ function showErrorInvalidInputFields(inputFields) {
 
 
 
-
+//could remove 
 function saveTransition(inputFields) {
 
     // console.log(`All inputt fields filled value ${allInputFieldsFilled(inputFields)}`)
@@ -727,24 +781,28 @@ saveButton.addEventListener("click", async () => {
     if (allInputFieldsFilled(inputFields) && allInputFieldsHasValidInput(inputFields))  {
         console.log("Save Stuff, cause everything is valid!");
         await closeInputModal(closeInputModalButton);
-        await hideDashboardLogo();
-        await displayLoadingAnimation();
+        await hideDashboardLogo(dashboardLogo);
+        await displayLoadingAnimation(loadingElement);
         await revealConfirmationMessageArea();
+
+        ///############save stuff would probably go here##########
+         //save based on diffrerent criteria. 
+        // 1. Save a t1  (add a new t1, if they are not exsisting)
+        // 2. edit either t1 or t2 if they are exsisting
+        // 3. add a new t2 (there is an exisiting t1 but no t2)
+        //########################################################
 
         setTimeout(async () => {
             await hideConfirmationMessageArea();
-            await displayLoadingAnimation();
+            await displayLoadingAnimation(loadingElement);
             await revealDashboardLogo();
             await clearInputModalData(inputFields);
-            await loadInputSloSelector();
+            await loadInputSloSelector(allSloURL);
         }, 5200);
        
     
         
-        //save based on diffrerent criteria. 
-        // 1. Save a t1  (add a new t1, if they are not exsisting)
-        // 2. edit either t1 or t2 if they are exsisting
-        // 3. add a new t2 (there is an exisiting t1 but no t2)
+       
 
     }
     else {
@@ -761,3 +819,6 @@ saveButton.addEventListener("click", async () => {
     //showErrorUnfilledInputFields(inputFields);
     // showErrorInvalidInputFields(inputFields);
 });
+
+
+export { revealUnselectedSelectorError,hideUnselectedSelectorError}

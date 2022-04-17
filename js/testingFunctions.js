@@ -117,7 +117,168 @@ function getCurrentSchoolTerm(currentMonth,currentYear){
 
 
 
+//Need to make tests for this....
+function BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj) {
+    
+     if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT1Des) && plotDataObj.hasOwnProperty(mostRecentT2Des) && plotDataObj.hasOwnProperty(percentagesMetT1) && plotDataObj.hasOwnProperty(T1) && plotDataObj.hasOwnProperty(T2)) {
+        return true;
+     }
+    
+    return true;
+
+}
+
+//Need to make tests for this....
+function t1TargetPlotDataObjectHasAllValidKeys(plotDatatObj) {
+    
+    if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT1Des) && plotDataObj.hasOwnProperty(percentagesMetT1) && plotDataObj.hasOwnProperty(T1)) {
+        return true;
+     }
+    
+    return true;
+
+}
 
 
-module.exports = { getErrorResponse400, getErrorResponse500, isValid400Error, isValid500Error,getCurrentSchoolTerm};
+//Need to make tests for this....
+function t2TargetPlotDataObjectHasAllValidKeys(plotDatatObj) {
+    
+    if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT2Des) && plotDataObj.hasOwnProperty(percentagesMetT2) && plotDataObj.hasOwnProperty(T2)) {
+        return true;
+     }
+    
+    return true;
+
+}
+
+
+
+//started with the test for this need to finish this .
+function loadDataTableBothTargets(plotDataObj){
+    
+    const numberOfKeysInObj = Object.Objectkeys(plotDataObj).length;
+
+    if (plotDataObj == null || typeof(plotDataObj) !== 'object' || numberOfKeysInObj == 0) {
+
+        return [];
+
+    }
+
+
+    if (!BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj)) {
+
+        return [];
+
+    }
+   
+
+    let result = [
+      
+      ['X', 'Percentage Met for T1', 'Percentage Met for T2', plotDataObj.mostRecentT1Des, plotDataObj.mostRecentT2Des]
+      
+    ];
+
+    const cols = plotDataObj.dates.length;
+
+    for (let index = 0; index < cols; index++){
+      
+      let rowArray = [];
+      
+        rowArray.push(plotDataObj.dates[index]);
+        rowArray.push(plotDataObj.percentagesMetT1[index]);
+        rowArray.push(plotDataObj.percentagesMetT2[index]);
+        rowArray.push(plotDataObj.T1[index]);
+        rowArray.push(plotDataObj.T2[index]);
+        result.push(rowArray);
+  }
+
+    return result;
+    
+}
+
+
+
+
+
+//Need to make tests for this....
+function loadDataTableBasedOnTargets(plotDataObj, target) {
+
+    const numberOfKeysInObj = Object.Objectkeys(plotDataObj).length;
+
+    if (plotDataObj == null || typeof(plotDataObj) !== 'object' || numberOfKeysInObj == 0) {
+
+        return [];
+
+    }
+
+    
+    if (target == "T1") {
+
+
+        if (!t1TargetPlotDataObjectHasAllValidKeys(plotDatatObj)){ 
+
+            return [];
+        }
+        
+
+        let result = [
+        
+            ['X','Percentage Met for T1',plotDataObj.mostRecentT1Des]
+    
+        ];
+  
+
+        const cols = plotDataObj.dates.length; 
+ 
+        for(let index = 0; index < cols; index++){
+            
+            let rowArray = [];
+
+            rowArray.push(plotDataObj.dates[index]);
+            rowArray.push(plotDataObj.percentagesMetT1[index]);
+            rowArray.push(plotDataObj.T1[index]);
+            result.push(rowArray);
+        }
+        
+        return result; 
+            
+}
+else {
+        
+        if (!t2TargetPlotDataObjectHasAllValidKeys(plotDatatObj)){ 
+
+            return [];
+        }
+        
+
+        let result = [
+
+            ['X', 'Percentage Met for T2', plotDataObj.mostRecentT2Des]
+            
+        ];
+
+        const cols = plotDataObj.dates.length; 
+
+        for (let index = 0; index < cols; index++){
+            
+            let rowArray = [];
+            
+            rowArray.push(plotDataObj.dates[index]);
+            rowArray.push(plotDataObj.percentagesMetT2[index]);
+            rowArray.push(plotDataObj.T2[index]);
+            
+            result.push(rowArray);
+        }
+
+
+        return result;
+    
+    }
+
+}
+
+
+
+
+module.exports = { getErrorResponse400, getErrorResponse500, isValid400Error, isValid500Error,getCurrentSchoolTerm,loadDataTableBothTargets,loadDataTableBasedOnTargets,t1TargetPlotDataObjectHasAllValidKeys,t2TargetPlotDataObjectHasAllValidKeys,BothTargetsPlotDataObjectHasAllValidKeys};
 

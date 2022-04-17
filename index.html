@@ -38,6 +38,9 @@
         <select id="SLO-selector-plt">
           <option selected value="0" disabled>Choose SLO</option>
         </select>
+        <div class="invalid-feedback selector" id="plt-error-slo-selector-not-filled" name="empty" style="display: none;">
+                    Please Select an SLO.
+        </div>
       </div>
       <div class="description-container" id="description-container-SLO-plt" style="display: none;">
         <textarea class="form-control" id="modal-SLO-description-plt" readonly> </textarea>
@@ -46,6 +49,9 @@
         <select id="measure-selector-plt">
           <option selected disabled>Choose Measure</option>
         </select>
+        <div class="invalid-feedback selector" id="plt-error-measure-selector-not-filled" name="empty" style="display: none;">
+                  Please Select a Measure.
+        </div>
       </div>
       <div class="description-container" id="description-container-measure-plt" style="display: none;">
         <textarea class="form-control" id="modal-measure-description-plt" readonly></textarea>
@@ -54,11 +60,17 @@
         <select id="start-selector-plt">
           <option selected disabled>Choose Start Date</option>
         </select>
+        <div class="invalid-feedback selector" id="plt-error-startdate-selector-not-filled" name="empty" style="display: none;">
+                  Please Select a Start Date.
+        </div>
       </div>
       <div class="input-group mb-3">
         <select id="end-selector-plt">
           <option selected >Choose End Date</option>
         </select>
+        <div class="invalid-feedback selector" id="plt-error-enddate-selector-not-filled" name="empty" style="display: none;">
+                  Please Select a End Date.
+        </div>
       </div>
     </form>
       </div>
@@ -87,7 +99,7 @@
             <select id="SLO-selector-data">
               <option selected disabled>Choose SLO</option>
             </select>
-            <div class="invalid-feedback selector" id="error-slo-selector-not-filled" name="empty" style="display: none;">
+            <div class="invalid-feedback selector" id="input-error-slo-selector-not-filled" name="empty" style="display: none;">
                     Please Select an SLO.
             </div>
         </div>
@@ -98,7 +110,7 @@
           <select id="measure-selector-data">
             <option selected disabled>Choose Measure</option>
           </select>
-          <div class="invalid-feedback selector" id="error-measure-selector-not-filled" name="empty" style="display: none;">
+          <div class="invalid-feedback selector" id="input-error-measure-selector-not-filled" name="empty" style="display: none;">
                   Please Select a Measure.
           </div>
         </div>
@@ -109,7 +121,7 @@
           <select id="SLO-selector-target">
             <option selected disabled>Choose Target</option>
           </select>
-          <div class="invalid-feedback selector" id="error-target-selector-not-filled" name="empty" style="display: none;">
+          <div class="invalid-feedback selector" id="input-error-target-selector-not-filled" name="empty" style="display: none;">
                   Please Select a Target.
           </div>
         </div>
@@ -278,8 +290,7 @@
       <div class="option line-size">
         <label for="body">Line Size:</label>
         <select id="line-size-selector">
-              <option selected >1</option>
-              <option>2</option>
+              <option selected >2</option>
               <option>3</option>
               <option>4</option>
               <option>5</option>
