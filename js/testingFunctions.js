@@ -59,7 +59,7 @@ function isValid400Error(code) {
 
 function isValid500Error(code) {
     
-    if ((code == 500) || (coder == 503)) {
+    if ((code == 500) || (code == 503)) {
         
         return true;
     }
@@ -72,14 +72,11 @@ function isValid500Error(code) {
 //Gets the current school term based on the current date.
 function getCurrentSchoolTerm(currentMonth,currentYear){
     
-    
-
     if (typeof (currentMonth) != "number" || typeof (currentYear) != "number") return "";
 
 
     if (currentMonth >= 13 || currentMonth < 1 || currentYear > 2200 || currentYear < 1992) return "";
     
-
 
     currentMonth = parseInt(currentMonth);
     currentYear = parseInt(currentYear);
@@ -112,65 +109,63 @@ function getCurrentSchoolTerm(currentMonth,currentYear){
 
             return `${startYear}-${endYear}`;
     }
+    
 }
 
 
-
-
-//Need to make tests for this....
-function BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj) {
+// //Need to make tests for this....
+// function BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj) {
     
-     if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT1Des) && plotDataObj.hasOwnProperty(mostRecentT2Des) && plotDataObj.hasOwnProperty(percentagesMetT1) && plotDataObj.hasOwnProperty(T1) && plotDataObj.hasOwnProperty(T2)) {
-        return true;
-     }
+//      if (plotDataObj.hasOwnProperty('dates') && plotDataObj.hasOwnProperty('mostRecentT1Des') && plotDataObj.hasOwnProperty('mostRecentT2Des') && plotDataObj.hasOwnProperty('percentagesMetT1') && plotDataObj.hasOwnProperty('T1') && plotDataObj.hasOwnProperty('T2')) {
+//         return true;
+//      }
     
-    return true;
+//     return true;
 
-}
+// }
 
-//Need to make tests for this....
-function t1TargetPlotDataObjectHasAllValidKeys(plotDatatObj) {
+// //Need to make tests for this....
+// function t1TargetPlotDataObjectHasAllValidKeys(plotDataObj) {
     
-    if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT1Des) && plotDataObj.hasOwnProperty(percentagesMetT1) && plotDataObj.hasOwnProperty(T1)) {
-        return true;
-     }
+//     if (plotDataObj.hasOwnProperty('dates') && plotDataObj.hasOwnProperty('mostRecentT1Des') && plotDataObj.hasOwnProperty('percentagesMetT1') && plotDataObj.hasOwnProperty('T1')) {
+//         return true;
+//      }
     
-    return true;
+//     return true;
 
-}
+// }
 
 
-//Need to make tests for this....
-function t2TargetPlotDataObjectHasAllValidKeys(plotDatatObj) {
+// //Need to make tests for this....
+// function t2TargetPlotDataObjectHasAllValidKeys(plotDataObj) {
     
-    if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT2Des) && plotDataObj.hasOwnProperty(percentagesMetT2) && plotDataObj.hasOwnProperty(T2)) {
-        return true;
-     }
+//     if (plotDataObj.hasOwnProperty('dates') && plotDataObj.hasOwnProperty('mostRecentT2Des') && plotDataObj.hasOwnProperty('percentagesMetT2') && plotDataObj.hasOwnProperty('T2')) {
+//         return true;
+//      }
     
-    return true;
+//     return true;
 
-}
+// }
 
 
 
-//started with the test for this need to finish this .
+//Loads a 2D array with the data needed to plot the graph for both targets.
 function loadDataTableBothTargets(plotDataObj){
     
-    const numberOfKeysInObj = Object.Objectkeys(plotDataObj).length;
-
-    if (plotDataObj == null || typeof(plotDataObj) !== 'object' || numberOfKeysInObj == 0) {
+    if (plotDataObj == null || typeof(plotDataObj) !== 'object' ) {
 
         return [];
 
     }
 
 
-    if (!BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj)) {
+    const numberOfKeysInObj = Object.keys(plotDataObj).length;
 
+    if (numberOfKeysInObj == 0){
+        
         return [];
-
+    
     }
-   
 
     let result = [
       
@@ -190,36 +185,32 @@ function loadDataTableBothTargets(plotDataObj){
         rowArray.push(plotDataObj.T1[index]);
         rowArray.push(plotDataObj.T2[index]);
         result.push(rowArray);
-  }
+    }
 
     return result;
     
 }
 
 
-
-
-
-//Need to make tests for this....
+//Loads a 2D array with the data needed to plot the graph for a single target.
 function loadDataTableBasedOnTargets(plotDataObj, target) {
 
-    const numberOfKeysInObj = Object.Objectkeys(plotDataObj).length;
-
-    if (plotDataObj == null || typeof(plotDataObj) !== 'object' || numberOfKeysInObj == 0) {
+    if (plotDataObj == null || typeof(plotDataObj) !== 'object' ) {
 
         return [];
 
     }
 
-    
-    if (target == "T1") {
 
+    const numberOfKeysInObj = Object.keys(plotDataObj).length;
 
-        if (!t1TargetPlotDataObjectHasAllValidKeys(plotDatatObj)){ 
-
-            return [];
-        }
+    if (numberOfKeysInObj == 0){
         
+        return [];
+    
+    }
+    
+    if (target == "T1") { 
 
         let result = [
         
@@ -238,17 +229,14 @@ function loadDataTableBasedOnTargets(plotDataObj, target) {
             rowArray.push(plotDataObj.percentagesMetT1[index]);
             rowArray.push(plotDataObj.T1[index]);
             result.push(rowArray);
+
         }
         
         return result; 
             
-}
-else {
+    }
+    else {
         
-        if (!t2TargetPlotDataObjectHasAllValidKeys(plotDatatObj)){ 
-
-            return [];
-        }
         
 
         let result = [
@@ -270,7 +258,6 @@ else {
             result.push(rowArray);
         }
 
-
         return result;
     
     }
@@ -279,6 +266,61 @@ else {
 
 
 
+//Checks if a string is numeric or not integer or decimal.
+function isNumeric(str) {
+  if (typeof str != "string") return false // we only process strings!  
+  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+}
 
-module.exports = { getErrorResponse400, getErrorResponse500, isValid400Error, isValid500Error,getCurrentSchoolTerm,loadDataTableBothTargets,loadDataTableBasedOnTargets,t1TargetPlotDataObjectHasAllValidKeys,t2TargetPlotDataObjectHasAllValidKeys,BothTargetsPlotDataObjectHasAllValidKeys};
+
+
+//checks is a value is in between lower and upper values inclusive i.e 1 to 10 1 and 10 included.
+function isBetweenInclusiveValues(number, lower, upper) {
+
+    if (number >= lower && number <= upper) return true;
+
+    return false;
+}
+
+
+
+//Checks if string is numeric and between 0 to 100 including 0 and 100.
+function numericInputIsValid(text) {
+
+    if (isNumeric(text) && isBetweenInclusiveValues(text, 0, 100)) {
+       return true; 
+    }
+
+    return false;
+}
+
+
+
+//Checks if a string is empty.
+function isEmptyString(string) {
+
+    const emptyString = "";
+
+    if (string == null) return false;
+
+    if (string == emptyString || string.trim() == emptyString) {
+        return true;
+    }
+
+    return false;
+}
+
+
+
+
+
+
+
+
+module.exports = {
+
+    getErrorResponse400, getErrorResponse500, isValid400Error, isValid500Error, getCurrentSchoolTerm, loadDataTableBothTargets, loadDataTableBasedOnTargets, isNumeric, isBetweenInclusiveValues, numericInputIsValid, isEmptyString
+
+};
 

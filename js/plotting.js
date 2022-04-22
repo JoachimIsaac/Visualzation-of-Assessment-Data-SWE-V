@@ -1,12 +1,19 @@
-import { revealUnselectedSelectorError} from '/js/inputting.js';
+import { clearPlotMeasureSelector, clearPlotStartDateSelector, clearPlotEndDateSelector, modalPlotSloDescriptionContainer, modalPlotMeasureDescriptionContainer} from '/js/plotModal.js';
+
+import {revealUnselectedSelectorError,} from '/js/inputting.js';
+import {clearInputSloSelector } from "/js/inputModal.js";
+
+
+//Resets selected SLO to it's default selection.
+var clearPlotSloSelector = clearInputSloSelector;
 
 const dashboardLogo = document.getElementById('dashboard-logo');
 const chartContainer = document.getElementById('chart-div');
 const loadingElement = document.getElementById('loading-element');
 
 
-
-////////////////////////////////////////////////Plotting modal elements/////////////////////////////////////
+///////////////////////////////////////////////Plotting Modal Elements////////////////////////////////////
+const closeButton = document.querySelector("#plottingModal > div > div > div.modal-header > button")
 const plottingModalPlotButton  = document.getElementById('plotting-button');
 const plottingModalCloseButton = document.querySelector("#plottingModal > div > div > div.modal-footer > button.btn.btn-secondary");
 const sloSelectorElement = document.getElementById('SLO-selector-plt');
@@ -14,21 +21,10 @@ const measureSelectorElement = document.getElementById('measure-selector-plt');
 const startDateSelectorElement = document.getElementById('start-selector-plt');
 const endDateSelectorElement = document.getElementById('end-selector-plt');
 const plotSettingsContainer = document.getElementById('settings-container');
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-const inputFields = {
-    sloSelector: sloSelectorElement,
-    measureSelector: measureSelectorElement,
-    startDateSelector: startDateSelectorElement,
-    endDateSelector:endDateSelectorElement
-};
-
-
-
-
-////////////////////////////////////Options containers for radio butttons on plot setttings/////////////
+//////////////////////////Options Containers For Radio Buttons On Plot Setttings//////////////////////////
 const targetPlotOptionButtonBoth = document.querySelector("#settings-container > div.option.\\31 ");
 const targetPlotOptionButtonT1 = document.querySelector("#settings-container > div.option.\\32 ");
 const targetPlotOptionButtonT2 = document.querySelector("#settings-container > div.option.\\33 ");
@@ -37,9 +33,7 @@ const targetPlotColorOptionButtonT2 = document.querySelector("#settings-containe
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-////////////////////////////////////// radio butttons on plot setttings//////////////////////////////////////
+////////////////////////////////////// Radio Buttons On Plot Settings/////////////////////////////////////
 const targetPlotRadioButtonBoth = document.querySelector("#\\=target-radio-1");
 const targetPlotRadioButtonT1 = document.querySelector("#\\=target-radio-2");
 const targetPlotRadioButtonT2 = document.querySelector("#\\=target-radio-3");
@@ -47,12 +41,19 @@ const targetPlotColorRadioButtonT1 = document.querySelector("#t1-color-selector"
 const targetPlotColorRadioButtonT2 = document.querySelector("#t2-color-selector");
 const pointSizeSelector = document.querySelector("#point-size-selector");
 const lineSizeSelector = document.querySelector("#line-size-selector");
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+//plot based input fields, (all selector elments)
+const inputFields = {
+    sloSelector: sloSelectorElement,
+    measureSelector: measureSelectorElement,
+    startDateSelector: startDateSelectorElement,
+    endDateSelector:endDateSelectorElement
+};
 
 
-
+//All elements that have to do with the display, logo, plot settings etc.
 const displayElements = {
 
     dashboardLogo: dashboardLogo,
@@ -64,22 +65,19 @@ const displayElements = {
     targetPlotOptionButtonT1:targetPlotOptionButtonT1,
     targetPlotOptionButtonT2: targetPlotOptionButtonT2,
     targetPlotColorOptionButtonT2: targetPlotColorOptionButtonT2,
-    targetPlotRadioButtonBoth:targetPlotRadioButtonBoth
+    targetPlotRadioButtonBoth: targetPlotRadioButtonBoth,
+    targetPlotRadioButtonT1: targetPlotRadioButtonT1 
 
 };
 
 
-
-
-
-
-var chartObj; 
-
+var chartObj; //Variable which holds the different instances of the graph.
 
 google.load("visualization", "1", { packages: ["corechart"] });
 
 
-//Grabs all the selectors (i.e SLO, Measure) and filters them based on the ones that are selected or not and returns them  iterable.
+
+// (i.e SLO, Measure) filters selectors based on the ones that are unselected and returns them in an array.
 function getAllUnslectedSelectors(inputFields) {
     
     if (inputFields == null) {
@@ -96,11 +94,14 @@ function getAllUnslectedSelectors(inputFields) {
     ];
 
     for (let currSelector of inputSelectors) {
+
         const defaultSelectorValue = currSelector.options[0].text;
         const selectorValue = currSelector.options[currSelector.selectedIndex].text;
             
         if (defaultSelectorValue == selectorValue) {
+
             unselectedInputSelectors.push(currSelector);
+
         }
 
     }
@@ -110,7 +111,19 @@ function getAllUnslectedSelectors(inputFields) {
 
 
 
+//Hides all selector errors SLO selector, measure Selector etc.
+function hideAllSelectorErrors(sloSelector, measureSelector, startDateSelector, endDateSelector) {
+    
+    hideUnselectedSelectorError(sloSelector);
+    hideUnselectedSelectorError(measureSelector);
+    hideUnselectedSelectorError(startDateSelector);
+    hideUnselectedSelectorError(endDateSelector);
 
+}
+
+
+
+//Hides the dashboard logo.
 function hideDashboardLogo(dashboardLogo) {
 
     dashboardLogo.style.display = "none";
@@ -119,16 +132,39 @@ function hideDashboardLogo(dashboardLogo) {
 
 
 
-function closePlottingModal(plottingModalCloseButton) {
-
-    plottingModalCloseButton.click();
+//Closes plotting modal.
+function closePlottingModal() {
+    
+    closeButton.click();
 
 }
 
 
 
+//Hides both description text boxes (slo and measure).
+function hideAllPlotSelectorDescriptions(sloSelectorDesContainer,measureSelectorDesContainer){
 
-function displayPlotSettings(plotSettingsContainer) {
+    sloSelectorDesContainer.style.display = 'none';
+    measureSelectorDesContainer.style.display = 'none';
+
+}
+
+
+
+//Return all SLO selectors into their default state.
+function clearPlotModalSelectors(inputFields) {
+  
+    clearPlotSloSelector(inputFields.sloSelector);
+    clearPlotMeasureSelector(inputFields.measureSelector);
+    clearPlotStartDateSelector(inputFields.startDateSelector,);
+    clearPlotEndDateSelector(inputFields.endDateSelector);
+    
+}
+
+
+
+//Displays the plot settings area.
+function displayPlotSettingsArea(plotSettingsContainer) {
 
     plotSettingsContainer.style.display = "flex";
 
@@ -136,18 +172,18 @@ function displayPlotSettings(plotSettingsContainer) {
 
 
 
-
 //Returns Boolean on whether the t1 button is checked or not.
 function target1RadioButtonChecked(targetPlotRadioButtonT1) {
 
-    if (targetPlotRadioButtonT1.checked){
+    if (targetPlotRadioButtonT1.checked) {
+        
         return true;
+
     }
 
     return false;
     
 }
-
 
 
 
@@ -167,47 +203,42 @@ function bothTargetsRadioButttonChecked(targetPlotRadioButtonBoth){
 
 
 //Handles plotting when user selects a radio button that controls which targets should be plotted.
-async function plotTransitionEditedTargets(chartContainer,loadingElement,targetPlotRadioButtonBoth,targetPlotRadioButtonT1) {
-
-    let plotDataUrl = await generatePlotDataQueryUrl();
+async function plotTransitionEditedTargets(plotDataUrl,displayElements) {
   
+    //If chart container is filled 
+    if (displayElements.chartContainer.children.length > 0) {
 
-    if (chartContainer.children.length > 0) {
-
-        await removeChartElement(chartContainer);
+        await removeChartElement(displayElements.chartContainer);
         
     }
      
-    await displayLoadingAnimation(loadingElement);
+    await displayLoadingAnimation(displayElements.loadingElement);
 
-
-    if (bothTargetsRadioButttonChecked(targetPlotRadioButtonBoth)) {//change to see if both radio is checked
+    
+    if (bothTargetsRadioButttonChecked(displayElements.targetPlotRadioButtonBoth)) {
         
         await plotChartWithBothTargets(plotDataUrl);
 
     }
-    else {
-        if (target1RadioButtonChecked(targetPlotRadioButtonT1)) {//change to see if t1 checked
+    else {//If a single target radio button is checked
+
+        //If T1 radio button is checked, plot for T1
+        if (target1RadioButtonChecked(displayElements.targetPlotRadioButtonT1)) {
            
             await plotChartBasedOnTargets(plotDataUrl, "T1");
 
         }
-        else {
+        else {//otherwise plot for T2
             
             await plotChartBasedOnTargets(plotDataUrl, "T2");
 
         }
 
-
     }
 
-    await displayChartElement(chartContainer);
+    await displayChartElement(displayElements.chartContainer);
     
 }
-
-
-
-
 
 
 
@@ -216,9 +247,9 @@ async function plotTransitionBothTargets(plotDataUrl,displayElements) {
 
     await hideDashboardLogo(displayElements.dashboardLogo);
    
-    await closePlottingModal(displayElements.plottingModalCloseButton);
+    await closePlottingModal();
   
-
+    //If chart container is filled 
     if (displayElements.chartContainer.children.length > 0) {
 
         await removeChartElement(displayElements.chartContainer);
@@ -231,9 +262,9 @@ async function plotTransitionBothTargets(plotDataUrl,displayElements) {
 
     await displayChartElement(displayElements.chartContainer);
 
-    setTimeout(() => {
+    setTimeout(() => {//Displays plot settings area and the buttons which can edit charts
 
-        displayPlotSettings(displayElements.plotSettingsContainer);
+        displayPlotSettingsArea(displayElements.plotSettingsContainer);
         revealBothTargetRadioButton(displayElements.targetPlotOptionButtonBoth);
         revealTargetT1RadioButton(displayElements.targetPlotOptionButtonT1);
         revealTargetT2RadioButton(displayElements.targetPlotOptionButtonT2);
@@ -246,13 +277,12 @@ async function plotTransitionBothTargets(plotDataUrl,displayElements) {
 
 
 
-
 //Handles plotting when there is only one target.
 async function plotTransitionSingleTarget(plotDataUrl,displayElements) {
     
     await hideDashboardLogo(displayElements.dashboardLogo);
    
-    await closePlottingModal(displayElements.plottingModalCloseButton);
+    await closePlottingModal();
 
     if (displayElements.chartContainer.children.length > 0) {
 
@@ -266,32 +296,32 @@ async function plotTransitionSingleTarget(plotDataUrl,displayElements) {
 
     await displayChartElement(displayElements.chartContainer);
 
-    setTimeout(() => {
+    setTimeout(() => {//Displays plotting area and hides all other options beside T1 options
 
-        displayPlotSettings(displayElements.plotSettingsContainer);
+        displayPlotSettingsArea(displayElements.plotSettingsContainer);
         hideBothTargetRadioButton(displayElements.targetPlotOptionButtonBoth);
-        hideTargetT1RadioButton(displayElements.targetPlotOptionButtonT1);
-        hideT2TargetRadioButton(displayElements.targetPlotOptionButtonT2);
+        hideTargetT2RadioButton(displayElements.targetPlotOptionButtonT2);
         hideTargetColorSelectorT2(displayElements.targetPlotColorOptionButtonT2);
         checkRadioButton(displayElements.targetPlotRadioButtonT1);
+        hideTargetT1RadioButton(displayElements.targetPlotOptionButtonT1);
     
     }, 2100);
+
 }
 
 
 
-//Handles the plotting when the color of a target is changed.
-async function plotTransitionEditedTargetColors(chartContainer,targetPlotRadioButtonT1,targetPlotRadioButtonBoth) {
-    
-    let plotDataUrl = await generatePlotDataQueryUrl();
+//Handles plotting when a color is selected/changed.
+async function plotTransitionEditedTargetColors(plotDataUrl,displayElements) {
 
-    if (bothTargetsRadioButttonChecked(targetPlotRadioButtonBoth)) {
+    if (bothTargetsRadioButttonChecked(displayElements.targetPlotRadioButtonBoth)) {
 
         await plotChartWithBothTargets(plotDataUrl);
 
     }
     else {
-        if (target1RadioButtonChecked(targetPlotRadioButtonT1)) {
+
+        if (target1RadioButtonChecked(displayElements.targetPlotRadioButtonT1)) {
 
             await plotChartBasedOnTargets(plotDataUrl, "T1" );
 
@@ -304,24 +334,23 @@ async function plotTransitionEditedTargetColors(chartContainer,targetPlotRadioBu
 
     }
 
-    await displayChartElement(chartContainer);
+    await displayChartElement(displayElements.chartContainer);
     
 }
 
 
 
-//Handles the plotting when the linesize of a target is changed.
-async function plotTransitonEditedGraphLineSize(chartContainer,targetPlotRadioButtonT1,targetPlotRadioButtonBoth) {
+//Handles plotting when the linesize of a target is selected/changed.
+async function plotTransitonEditedGraphLineSize(plotDataUrl,displayElements) {
 
-    let plotDataUrl = await generatePlotDataQueryUrl();
-
-    if (bothTargetsRadioButttonChecked(targetPlotRadioButtonBoth)) {
+    if (bothTargetsRadioButttonChecked(displayElements.targetPlotRadioButtonBoth)) {
 
         await plotChartWithBothTargets(plotDataUrl);
        
     }
     else {
-        if (target1RadioButtonChecked(targetPlotRadioButtonT1)) {
+
+        if (target1RadioButtonChecked(displayElements.targetPlotRadioButtonT1)) {
 
             await plotChartBasedOnTargets(plotDataUrl, "T1");
         
@@ -334,26 +363,23 @@ async function plotTransitonEditedGraphLineSize(chartContainer,targetPlotRadioBu
 
     }
 
-    await displayChartElement(chartContainer);
+    await displayChartElement(displayElements.chartContainer);
 
 }
 
 
 
+//Handles plotting when the point size of a target is selected/changed.
+async function plotTransitionEditedGraphPointSize(plotDataUrl,displayElements) {
 
-//Handles the plotting when the Point size of a target is changed.
-async function plotTransitionEditedGraphPointSize(chartContainer,targetPlotRadioButtonT1,targetPlotRadioButtonBoth) {
-
-    let plotDataUrl = await generatePlotDataQueryUrl();
-
-    if (bothTargetsRadioButttonChecked(targetPlotRadioButtonBoth)) {
+    if (bothTargetsRadioButttonChecked(displayElements.targetPlotRadioButtonBoth)) {
 
         plotChartWithBothTargets(plotDataUrl);    
         
     }
     else {
 
-        if (target1RadioButtonChecked(targetPlotRadioButtonT1)) {
+        if (target1RadioButtonChecked(displayElements.targetPlotRadioButtonT1)) {
 
             await plotChartBasedOnTargets(plotDataUrl, "T1");
      
@@ -366,33 +392,30 @@ async function plotTransitionEditedGraphPointSize(chartContainer,targetPlotRadio
 
     }
 
-    await displayChartElement(chartContainer);
+    await displayChartElement(displayElements.chartContainer);
 
 }
  
 
 
 
-//test , need to make a dumby plot object , could get it on replit (made one previously)
 //Loads a 2D array with the data needed to plot the graph for both targets.
 function loadDataTableBothTargets(plotDataObj){
     
-    const numberOfKeysInObj = Object.Objectkeys(plotDataObj).length;
-
-    if (plotDataObj == null || typeof(plotDataObj) !== 'object' || numberOfKeysInObj == 0) {
+    if (plotDataObj == null || typeof(plotDataObj) !== 'object' ) {
 
         return [];
 
     }
 
-   
 
-    if (!BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj)) {
+    const numberOfKeysInObj = Object.keys(plotDataObj).length;
 
+    if (numberOfKeysInObj == 0){
+        
         return [];
-
+    
     }
-   
 
     let result = [
       
@@ -412,7 +435,7 @@ function loadDataTableBothTargets(plotDataObj){
         rowArray.push(plotDataObj.T1[index]);
         rowArray.push(plotDataObj.T2[index]);
         result.push(rowArray);
-  }
+    }
 
     return result;
     
@@ -420,28 +443,25 @@ function loadDataTableBothTargets(plotDataObj){
 
 
 
-
-//test same as above
 //Loads a 2D array with the data needed to plot the graph for a single target.
 function loadDataTableBasedOnTargets(plotDataObj, target) {
 
-    const numberOfKeysInObj = Object.Objectkeys(plotDataObj).length;
-
-    if (plotDataObj == null || typeof(plotDataObj) !== 'object' || numberOfKeysInObj == 0) {
+    if (plotDataObj == null || typeof(plotDataObj) !== 'object' ) {
 
         return [];
 
     }
 
-    
-    if (target == "T1") {
 
+    const numberOfKeysInObj = Object.keys(plotDataObj).length;
 
-        if (!t1TargetPlotDataObjectHasAllValidKeys(plotDatatObj)){ 
-
-            return [];
-        }
+    if (numberOfKeysInObj == 0){
         
+        return [];
+    
+    }
+    
+    if (target == "T1") { 
 
         let result = [
         
@@ -460,17 +480,14 @@ function loadDataTableBasedOnTargets(plotDataObj, target) {
             rowArray.push(plotDataObj.percentagesMetT1[index]);
             rowArray.push(plotDataObj.T1[index]);
             result.push(rowArray);
+
         }
         
         return result; 
             
-}
-else {
+    }
+    else {
         
-        if (!t2TargetPlotDataObjectHasAllValidKeys(plotDatatObj)){ 
-
-            return [];
-        }
         
 
         let result = [
@@ -492,7 +509,6 @@ else {
             result.push(rowArray);
         }
 
-
         return result;
     
     }
@@ -501,7 +517,7 @@ else {
 
 
 
-
+//Displays the element where the graph is rendered.
 function displayChartElement(chartContainer) {
 
     chartContainer.style.display = "block";
@@ -510,7 +526,7 @@ function displayChartElement(chartContainer) {
 
 
 
-//Removes the element that is linked with the chart  
+//Removes the element that the chart is plotted on.
 function removeChartElement(chartContainer) {
 
     let child = chartContainer.children[0];
@@ -522,23 +538,26 @@ function removeChartElement(chartContainer) {
 
 
 
-function displayColorOptionT1(targetPlotColorOptionButtonT1) {
+//Displays the T1 color selector in the settings section. 
+function displayColorSelectorT1(targetPlotColorSelectorButtonT1) {
 
-    targetPlotColorOptionButtonT1.style.display = "block";
-
-}
-
-
-
-function displayColorOptionT2(targetPlotColorOptionButtonT2) {
-
-    targetPlotColorOptionButtonT2.style.display = "block";
+    targetPlotColorSelectorButtonT1.style.display = "block";
 
 }
 
 
 
-function hideColorOptionT1(targetPlotColorOptionButtonT1) { 
+//Displays the T2 color selector in the settings section. 
+function displayColorSelectorT2(targetPlotColorSelectorButtonT2) {
+
+    targetPlotColorSelectorButtonT2.style.display = "block";
+
+}
+
+
+
+//Hides the T1 color selector in the settings section. 
+function hideColorSelectorT1(targetPlotColorOptionButtonT1) { 
 
     targetPlotColorOptionButtonT1.style.display = "none";
 
@@ -546,12 +565,12 @@ function hideColorOptionT1(targetPlotColorOptionButtonT1) {
 
 
 
-function hideColorOptionT2(targetPlotColorOptionButtonT2) { 
+//Hides the T2 color selector in the settings section. 
+function hideColorSelectorT2(targetPlotColorOptionButtonT2) { 
 
     targetPlotColorOptionButtonT2.style.display = "none";
 
 }
-
 
 
 
@@ -611,8 +630,7 @@ function plotChartWithBothTargets(requestUrl) {
 
 
 
-
-//Plots based on the target that was passed in T1 or T2 
+//Plots based on the target that was passed in, T1 or T2 
 function plotChartBasedOnTargets(requestUrl, target) {
 
     let t1Color = document.querySelector("#t1-color-selector").value;
@@ -633,7 +651,7 @@ function plotChartBasedOnTargets(requestUrl, target) {
 
         google.setOnLoadCallback(drawChartBasedOnTarget);
 
-         function drawChartBasedOnTarget() {
+        function drawChartBasedOnTarget() {
 
             let data = google.visualization.arrayToDataTable(loadDataTableBasedOnTargets(plottingDataObj, target));
              
@@ -670,7 +688,7 @@ function plotChartBasedOnTargets(requestUrl, target) {
 
 
 
-
+//Remove the loading element from the screen (spinning element for loading screen)
 function clearloadingElement(loadingElement) {
 
     loadingElement.style.display = "none";
@@ -679,21 +697,22 @@ function clearloadingElement(loadingElement) {
 
 
 
-
+//Display the loading element from the screen (spinning element for loading screen)
 function displayLoadingAnimation(loadingElement) {
 
     loadingElement.style.display = "block";
 
-     setTimeout(() => {
-         clearloadingElement(loadingElement);
+    setTimeout(() => {
+         
+        clearloadingElement(loadingElement);
+
      }, 2000);
     
 }
  
 
 
-
-//Returns an endpoint (url string) based on all the selected information. 
+//Returns an endpoint (url string) based on all the selected information for plotting. 
 function generatePlotDataQueryUrl() {
 
     const currentSelectedSlo = sloSelectorElement.options[sloSelectorElement.selectedIndex].text;
@@ -701,14 +720,13 @@ function generatePlotDataQueryUrl() {
     const currentSelectedStartDate = startDateSelectorElement.options[startDateSelectorElement.selectedIndex].text;
     const currentSelectedEndDate = endDateSelectorElement.options[endDateSelectorElement.selectedIndex].text;
 
-    const url = `https://visualization-practice-api.herokuapp.com/plot?slo=${currentSelectedSlo}&measure=${currentSelectedMeasure}&start_date=${currentSelectedStartDate}&end_date=${currentSelectedEndDate}`;
+    const url = `http://127.0.0.1:8000/plot?slo=${currentSelectedSlo}&measure=${currentSelectedMeasure}&start_date=${currentSelectedStartDate}&end_date=${currentSelectedEndDate}`;
 
     return url;
 }
 
 
  
-
 //Return a boolean based on whether all the plotting data is selected or not. 
 function allPlottingInfoIsSelected(sloSelectorElement, measureSelectorElement, startDateSelectorElement, endDateSelectorElement) {
     
@@ -722,7 +740,7 @@ function allPlottingInfoIsSelected(sloSelectorElement, measureSelectorElement, s
     let currentSelectedStartDate = startDateSelectorElement.options[startDateSelectorElement.selectedIndex].text;
     let currentSelectedEndDate = endDateSelectorElement.options[endDateSelectorElement.selectedIndex].text;
     
-
+    
     //All selected info is not equal to their default selections
     if (currentSelectedSlo != defaultSelectedSlo && currentSelectedMeasure != defaultSelectedMeasure && currentSelectedStartDate != defaultSelectedStartDate && currentSelectedEndDate != defaultSelectedEndDate) {
 
@@ -736,27 +754,12 @@ function allPlottingInfoIsSelected(sloSelectorElement, measureSelectorElement, s
 
 
 
-
 //Sets a radio button to checked
 function checkRadioButton(radioButton) {
     
     radioButton.checked = true;
 
 }
-
-
-
-//test!!!
-function hasBothTargets(plotData) {
-
-    if (plotData.T2.length == 0 && plotData.percentagesMetT2.length == 0 && plotData.mostRecentT2Des == "") {
-
-        return false;
-    }
-
-    return true;
-}
-
 
 
 
@@ -776,6 +779,7 @@ function revealBothTargetRadioButton(targetPlotOptionButtonBoth) {
 
 
 
+//Hides target 1 radio button.
 function hideTargetT1RadioButton(targetPlotOptionButtonT1) {
 
     targetPlotOptionButtonT1.style.display = "none";
@@ -784,7 +788,7 @@ function hideTargetT1RadioButton(targetPlotOptionButtonT1) {
 
 
 
-
+//Displays target 1 radio button.
 function revealTargetT1RadioButton(targetPlotOptionButtonT1) {
 
     targetPlotOptionButtonT1.style.display = "block";
@@ -793,8 +797,8 @@ function revealTargetT1RadioButton(targetPlotOptionButtonT1) {
 
 
 
-
-function hideT2TargetRadioButton(targetPlotOptionButtonT2) {
+//Hides target 2 radio button.
+function hideTargetT2RadioButton(targetPlotOptionButtonT2) {
 
     targetPlotOptionButtonT2.style.display = "none";
 
@@ -802,6 +806,7 @@ function hideT2TargetRadioButton(targetPlotOptionButtonT2) {
 
 
 
+//Displays target 2 radio button.
 function revealTargetT2RadioButton(targetPlotOptionButtonT2) {
 
     targetPlotOptionButtonT2.style.display = "block";
@@ -809,7 +814,7 @@ function revealTargetT2RadioButton(targetPlotOptionButtonT2) {
 }
 
 
-
+//Hides the target 2 color selector.
 function hideTargetColorSelectorT2(targetPlotColorOptionButtonT2) {
 
     targetPlotColorOptionButtonT2.style.display = "none";
@@ -818,7 +823,7 @@ function hideTargetColorSelectorT2(targetPlotColorOptionButtonT2) {
 
 
 
-
+//Displays the target 2 color selector.
 function revealTargetColorSelectorT2(targetPlotColorOptionButtonT2) {
     
      targetPlotColorOptionButtonT2.style.display = "block";
@@ -827,77 +832,98 @@ function revealTargetColorSelectorT2(targetPlotColorOptionButtonT2) {
 
 
 
-//Event listener for when the the both target radio button is selected.
-targetPlotRadioButtonBoth.addEventListener('change', () => {
+//On Change Event listener for when the the bothTarget radio button is selected.
+targetPlotRadioButtonBoth.addEventListener('change', async () => {
 
-    plotTransitionEditedTargets(chartContainer,loadingElement,targetPlotRadioButtonBoth,targetPlotRadioButtonT1);
-    displayColorOptionT1(targetPlotColorOptionButtonT1);
-    displayColorOptionT2(targetPlotColorOptionButtonT2);
+    let plotDataUrl = await generatePlotDataQueryUrl();
+
+    plotTransitionEditedTargets(plotDataUrl,displayElements);
+    displayColorSelectorT1(targetPlotColorOptionButtonT1);
+    displayColorSelectorT2(targetPlotColorOptionButtonT2);
     
 });
 
 
 
-//Event listener for when the the T1 radio button is selected.
-targetPlotRadioButtonT1.addEventListener('change', () => {
+//On Change Event listener for when the the T1 radio button is selected.
+targetPlotRadioButtonT1.addEventListener('change', async () => {
 
-    plotTransitionEditedTargets(chartContainer,loadingElement,targetPlotRadioButtonBoth,targetPlotRadioButtonT1);
-    displayColorOptionT1(targetPlotColorOptionButtonT1);
-    hideColorOptionT2(targetPlotColorOptionButtonT2);
+    let plotDataUrl = await generatePlotDataQueryUrl();
+
+    plotTransitionEditedTargets(plotDataUrl,displayElements);
+    displayColorSelectorT1(targetPlotColorOptionButtonT1);
+    hideColorSelectorT2(targetPlotColorOptionButtonT2);
     
 });
 
 
 
-//Event listener for when the the T2 radio button is selected.
-targetPlotRadioButtonT2.addEventListener('change', () => {
+//On Change Event listener for when the the T2 radio button is selected.
+targetPlotRadioButtonT2.addEventListener('change', async () => {
 
-    plotTransitionEditedTargets(chartContainer,loadingElement,targetPlotRadioButtonBoth,targetPlotRadioButtonT1);
-    hideColorOptionT1(targetPlotColorOptionButtonT1); 
-    displayColorOptionT2(targetPlotColorOptionButtonT2);
+    let plotDataUrl = await generatePlotDataQueryUrl();
+
+    plotTransitionEditedTargets(plotDataUrl,displayElements);
+    hideColorSelectorT1(targetPlotColorOptionButtonT1); 
+    displayColorSelectorT2(targetPlotColorOptionButtonT2);
 
 });
 
 
 
+//On Change Event listener for when the the T1 color radio button is selected.
+targetPlotColorRadioButtonT1.addEventListener('change', async () => {
 
-//Event listener for when the the T1 color radio button is selected.
-targetPlotColorRadioButtonT1.addEventListener('change', () => {
+    let plotDataUrl = await generatePlotDataQueryUrl();
 
-    plotTransitionEditedTargetColors(chartContainer, targetPlotRadioButtonT1, targetPlotRadioButtonBoth);
+    plotTransitionEditedTargetColors(plotDataUrl,displayElements);
     
 });
 
 
 
+//On Change Event listener for when the the T2 color radio button is selected.
+targetPlotColorRadioButtonT2.addEventListener('change', async () => {
+    
+    let plotDataUrl = await generatePlotDataQueryUrl();
 
-//Event listener for when the the T2 color radio button is selected.
-targetPlotColorRadioButtonT2.addEventListener('change',() => {
-
-    plotTransitionEditedTargetColors(chartContainer, targetPlotRadioButtonT1, targetPlotRadioButtonBoth);
+    plotTransitionEditedTargetColors(plotDataUrl,displayElements);
     
 });
 
 
 
+//On Change Event listener for when the the point size radio button is selected.
+pointSizeSelector.addEventListener('change', async () => {
+    
+    let plotDataUrl = await generatePlotDataQueryUrl();
 
-//Event listener for when the the point size radio button is selected.
-pointSizeSelector.addEventListener('change',() => {
-
-    plotTransitionEditedGraphPointSize(chartContainer,targetPlotRadioButtonT1,targetPlotRadioButtonBoth);
+    plotTransitionEditedGraphPointSize(plotDataUrl,displayElements);
     
 });
 
 
 
+//On Change Event listener for when the the line size radio button is selected.
+lineSizeSelector.addEventListener('change', async () => {
 
-//Event listener for when the the line size radio button is selected.
-lineSizeSelector.addEventListener('change', () => {
-    
-    plotTransitonEditedGraphLineSize(chartContainer, targetPlotRadioButtonT1, targetPlotRadioButtonBoth);
+    let plotDataUrl = await generatePlotDataQueryUrl();
+
+    plotTransitonEditedGraphLineSize(plotDataUrl,displayElements);
     
 });
 
+
+
+//Onclick event listener for modal close button.
+plottingModalCloseButton.addEventListener("click", () => {
+
+        hideAllPlotSelectorDescriptions(modalPlotSloDescriptionContainer, modalPlotMeasureDescriptionContainer);
+        hideAllSelectorErrors(inputFields.sloSelector, inputFields.measureSelector, inputFields.startDateSelector, inputFields.endDateSelector);
+        clearPlotModalSelectors(inputFields);
+        closePlottingModal();
+
+});
 
 
 
@@ -908,25 +934,32 @@ plottingModalPlotButton.addEventListener('click', async () => {
 
         let plotDataUrl = await generatePlotDataQueryUrl();
 
-        axios.get(plotDataUrl).then(response => {
+        const currentSelectedSlo = sloSelectorElement.options[sloSelectorElement.selectedIndex].text;
 
-            let plottingDataObj = response.data;
-    
-            if (hasBothTargets(plottingDataObj)) {
+        const currentSelectedMeasure = measureSelectorElement.options[measureSelectorElement.selectedIndex].text;
+
+
+        axios.get(`http://127.0.0.1:8000/target/T2/exist/${currentSelectedSlo}/${currentSelectedMeasure}`).then((response) => {
+            
+            const hasBothTargets = response.data;
+
+            console.log(`Has both targets: ${hasBothTargets} for : ${currentSelectedSlo} and ${currentSelectedMeasure}`);
+
+            if (hasBothTargets) {//If the current selection has both target plot both.
                 
-                console.log("worked!!!!")
                 plotTransitionBothTargets(plotDataUrl,displayElements);
 
             }
-            else {
+            else {//Otherwise plot the single target.
                 
                 plotTransitionSingleTarget(plotDataUrl,displayElements);
                 
             }
-         
+            
         });
+       
     }
-    else {
+    else {//If all selectors are not selected then reveal the unselected errors for them.
         
         const unfilledSelectors = getAllUnslectedSelectors(inputFields);
 
@@ -935,45 +968,6 @@ plottingModalPlotButton.addEventListener('click', async () => {
     }
 
 });
-
-
-
-
-function BothTargetsPlotDataObjectHasAllValidKeys(plotDataObj) {
-    
-     if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT1Des) && plotDataObj.hasOwnProperty(mostRecentT2Des) && plotDataObj.hasOwnProperty(percentagesMetT1) && plotDataObj.hasOwnProperty(T1) && plotDataObj.hasOwnProperty(T2)) {
-        return true;
-     }
-    
-    return true;
-
-}
-
-
-
-//This let us know if the object we are using (i.e hashtable) is structured with the valid key values for a T1 plot 
-function t1TargetPlotDataObjectHasAllValidKeys(plotDatatObj) {
-    
-    if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT1Des) && plotDataObj.hasOwnProperty(percentagesMetT1) && plotDataObj.hasOwnProperty(T1)) {
-        return true;
-     }
-    
-    return true;
-
-}
-
-
-
-//This let us know if the object we are using (i.e hashtable) is structured with the valid key values for a T2 plot 
-function t2TargetPlotDataObjectHasAllValidKeys(plotDatatObj) {
-    
-    if (plotDataObj.hasOwnProperty(dates) && plotDataObj.hasOwnProperty(mostRecentT2Des) && plotDataObj.hasOwnProperty(percentagesMetT2) && plotDataObj.hasOwnProperty(T2)) {
-        return true;
-     }
-    
-    return true;
-
-}
 
 
 

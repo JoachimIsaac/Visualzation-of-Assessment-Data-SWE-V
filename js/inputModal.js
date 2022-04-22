@@ -1,34 +1,34 @@
 import {addOptionToSelectorElement,loadSloSelector,loadMeasureSelector,loadSloDescription,loadMeasureDescription} from "/js/plotModal.js"; 
 
 
-const allSloURL = 'https://visualization-practice-api.herokuapp.com/slo/all';
+const allSloURL = 'http://127.0.0.1:8000/slo/all';
 
 
 
-////////////////////////////////// Input Field Containers////////////////////////////////////////////
+////////////////////////////////// Input Field Containers/////////////////////////////
 const numberOfStudentsContainer = document.getElementById('number-of-students-container');
 const numberOfStudentsMetContainer = document.getElementById('number-of-students-met-container');
 const percentageOfStudentsContainer = document.getElementById('percentage-of-students-met-container');
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////Input Modal Selector Elements////////////////////////////////////////
+////////////////////////////Input Modal Selector Elements/////////////////////////////
 const modalInputSloSelector = document.getElementById('SLO-selector-data');
 const modalInputMeasureSelector = document.getElementById('measure-selector-data');
 const modalInputTargetSelector = document.getElementById('SLO-selector-target');
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////// Description Conatiners///////////////////////////////////////
+//////////////////////////////// Description Conatiners////////////////////////////////
 const modalInputSloDescriptionContainer = document.getElementById('modal-SLO-description-data');
 const modalInputMeasureDescriptionContainer = document.getElementById('modal-measure-description-data');
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 
 
-/////////////////////////////////////TextBox Elements /////////////////////////////////////////////////
+/////////////////////////////////////TextBox Elements /////////////////////////////////
 const modalInputSloDescriptionTextBox = document.getElementById('modal-SLO-description-data');
 const modalInputMeasureDescriptionTextbox = document.getElementById('modal-measure-description-data');
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 
 
 const modalInputAcademicTermTag = document.getElementById('current-academic-year-tag');
@@ -39,50 +39,48 @@ const studentPecentageCheckSwitch = document.getElementById('flexSwitchStudentPe
 //Returns current school term based on date and month passed.
 function getCurrentSchoolTerm(currentMonth,currentYear){
     
-    
-
     if (typeof (currentMonth) != "number" || typeof (currentYear) != "number") return "";
-
 
     if (currentMonth >= 13 || currentMonth < 1 || currentYear > 2200 || currentYear < 1992) return "";
     
-
-
+    const MAY = 5;
     currentMonth = parseInt(currentMonth);
     currentYear = parseInt(currentYear);
-  
-    const MAY = 5;
+
   
     if(currentMonth < MAY){
         
-            let startYear = currentYear-1;
-            let endYear = currentYear;
-            
-            startYear = startYear.toString();
-            endYear = endYear.toString();
+        let startYear = currentYear-1;
+        let endYear = currentYear;
+        
+        startYear = startYear.toString();
+        endYear = endYear.toString();
 
-            startYear = startYear.slice(2,4);
-            endYear = endYear.slice(2,4);
+        startYear = startYear.slice(2,4);
+        endYear = endYear.slice(2,4);
 
-            return `${startYear}-${endYear}`; 
+        return `${startYear}-${endYear}`; 
+        
     }
     else{
         
-            let startYear = currentYear;
-            let endYear = currentYear+1;
-            
-            startYear = startYear.toString();
-            endYear = endYear.toString();
+        let startYear = currentYear;
+        let endYear = currentYear+1;
+        
+        startYear = startYear.toString();
+        endYear = endYear.toString();
 
-            startYear = startYear.slice(2,4);
-            endYear = endYear.slice(2,4);
+        startYear = startYear.slice(2,4);
+        endYear = endYear.slice(2,4);
 
-            return `${startYear}-${endYear}`;
+        return `${startYear}-${endYear}`;
     }
+    
 }
 
 
 
+//Loads the academic year term tag with the current academic year.
 function loadAcademicTermTag(modalInputAcademicTermTag) {
 
     const date = new Date();
@@ -92,7 +90,6 @@ function loadAcademicTermTag(modalInputAcademicTermTag) {
     modalInputAcademicTermTag.textContent = getCurrentSchoolTerm(currentMonth,currentYear); 
     
 }
-
 
 
 
@@ -112,26 +109,18 @@ function hideUnselectedSelectorError(selector) {
 
 
 
-
-
+//Set the slo selected  option to default option and hides description box.
 function clearInputSloSelector(modalInputSloSelector) {
 
-    modalInputSloSelector.textContent = null;
+    modalInputSloSelector.selectedIndex = 0;
 
-    let tempOption = document.createElement('option');
-    tempOption.value = 0;
-    tempOption.textContent = "Choose SLO";
-    
-    modalInputSloSelector.appendChild(tempOption);
     modalInputSloDescriptionContainer.style.display = "none";
 
-    tempOption.disabled = true;
 }
 
 
 
-
-
+//Empties options, loads the default option and hides description box for the measure selector.
 function clearInputMeasureSelector(modalInputMeasureSelector) {
 
     modalInputMeasureSelector.textContent = null;
@@ -149,7 +138,7 @@ function clearInputMeasureSelector(modalInputMeasureSelector) {
 
 
 
-
+//Empties options, loads the default option and hides description box for the target selector.
 function clearInputTargetSelector(modalInputTargetSelector) {
 
     modalInputTargetSelector.textContent = null;
@@ -159,12 +148,13 @@ function clearInputTargetSelector(modalInputTargetSelector) {
     tempOption.textContent = "Choose Target";
   
     modalInputTargetSelector.appendChild(tempOption);
+    
 }
 
 
 
-
-function loadInputSloSelector(allSloURL) {
+//Loads the selector with SLO data e.i S1, S2, S3 etc.
+function loadInputSloSelector(allSloURL, modalInputSloSelector) {
 
     loadSloSelector(allSloURL, modalInputSloSelector);
 
@@ -172,8 +162,7 @@ function loadInputSloSelector(allSloURL) {
 
 
 
-
-
+//Loads the SLO description box with a SlO's descritpion.
 function loadSloDescriptionData(selectedSlo,sloDescriptionTextbox,sloDescriptionContainer) { 
 
     loadSloDescription(selectedSlo, sloDescriptionTextbox, sloDescriptionContainer);
@@ -182,6 +171,7 @@ function loadSloDescriptionData(selectedSlo,sloDescriptionTextbox,sloDescription
 
 
 
+//Loads the measure description box with a Measure's descritpion.
 function loadMeasureDescriptionData(selectedSlo, selectedMeasure) {
 
     loadMeasureDescription(selectedSlo, selectedMeasure, modalInputMeasureDescriptionTextbox, modalInputMeasureDescriptionContainer);
@@ -190,25 +180,33 @@ function loadMeasureDescriptionData(selectedSlo, selectedMeasure) {
 
 
 
+//Hides all selector errors on the input modal.
+function hideAllInputModalSelectorErrors(sloSelector, measureSelector, targetSelector) {
+    
+    hideUnselectedSelectorError(sloSelector);
+    hideUnselectedSelectorError(measureSelector);
+    hideUnselectedSelectorError(targetSelector);
 
+}
+
+
+
+//On change event event listener for modal input SLO selector.
+//Which loads the Measure selector based on the previously selected slo.
 modalInputSloSelector.addEventListener('change', () => {
     
     clearInputMeasureSelector(modalInputMeasureSelector);
-
     clearInputTargetSelector(modalInputTargetSelector);
-
     hideUnselectedSelectorError(modalInputSloSelector);
     
-    
-
    let selectedSlo = modalInputSloSelector.options[modalInputSloSelector.selectedIndex].textContent;
 
     if (selectedSlo != "Choose SLO") {
 
-        let measureUrl = `https://visualization-practice-api.herokuapp.com/measure/${selectedSlo}`;
+        let measureUrl = `http://127.0.0.1:8000/measure/${selectedSlo}`;
 
         loadMeasureSelector(measureUrl, modalInputMeasureSelector);
-        loadSloDescriptionData(selectedSlo, modalInputSloDescriptionTextBox, modalInputSloDescriptionContainer)
+        loadSloDescriptionData(selectedSlo, modalInputSloDescriptionTextBox, modalInputSloDescriptionContainer);
         
     }
 
@@ -216,22 +214,22 @@ modalInputSloSelector.addEventListener('change', () => {
 
 
 
-
- 
+//On change event event listener for modal input Measure selector.
+//Which loads the target selector based on the the previously selected slo and measure.
 modalInputMeasureSelector.addEventListener('change',() => {
 
     clearInputTargetSelector(modalInputTargetSelector);
-
     hideUnselectedSelectorError(modalInputMeasureSelector);
-    
 
-    let selectedSlo = modalInputSloSelector.options[modalInputSloSelector.selectedIndex].textContent;
-    let selectedMeasure = modalInputMeasureSelector.options[modalInputMeasureSelector.selectedIndex].textContent;
+    const selectedSlo = modalInputSloSelector.options[modalInputSloSelector.selectedIndex].textContent;
+    const selectedMeasure = modalInputMeasureSelector.options[modalInputMeasureSelector.selectedIndex].textContent;
     
 
     if (selectedMeasure!= "Choose Measure") {
+        
+        const currentDate = modalInputAcademicTermTag.textContent;
 
-        let measureUrl = `https://visualization-practice-api.herokuapp.com/targets/${selectedSlo}/${selectedMeasure}`;
+        let measureUrl = `http://127.0.0.1:8000/input/options/${selectedSlo}/${selectedMeasure}/${currentDate}`;
 
         axios.get(measureUrl).then(response => {
 
@@ -240,11 +238,9 @@ modalInputMeasureSelector.addEventListener('change',() => {
             
             targets.forEach((target) => {
 
-                if (target != "description") {
-                    addOptionToSelectorElement(target, count, modalInputTargetSelector);
-                    count += 1;
-                }
-
+                addOptionToSelectorElement(target, count, modalInputTargetSelector);
+                count += 1;
+                
             });   
 
         });
@@ -261,8 +257,7 @@ modalInputMeasureSelector.addEventListener('change',() => {
 
 
 
-
-
+//On change event listener for the target selector element.
 //When target selector is changed and there is an unslected error displayed the error is removed.
 modalInputTargetSelector.addEventListener('change', () => {
 
@@ -271,9 +266,10 @@ modalInputTargetSelector.addEventListener('change', () => {
 });
 
 
-//event listener for switch that hides the input between the number of 
+
+//Event listener for switch that hides the input between the number of 
 //students & number of students that Met inputfields) & the 
-//percentage of students that met the target inputfield 
+//percentage of students that met the target inputfield.
 studentPecentageCheckSwitch.addEventListener('change', () => {
 
     if (studentPecentageCheckSwitch.checked) {
@@ -295,15 +291,12 @@ studentPecentageCheckSwitch.addEventListener('change', () => {
 
 
 
-
-//OnLoad event, loads SLO selector and the academic term tag.
+//OnLoad window event, loads SLO selector and the academic term tag.
 window.addEventListener("load",  ()=> {
   loadAcademicTermTag(modalInputAcademicTermTag);
-  loadInputSloSelector(allSloURL);
+  loadInputSloSelector(allSloURL, modalInputSloSelector);
 });
 
 
-
-
-
-export {clearInputSloSelector,modalInputSloSelector,clearInputMeasureSelector,modalInputMeasureSelector,clearInputTargetSelector,modalInputTargetSelector,loadInputSloSelector,allSloURL};
+//All exportable functions to be reused. 
+export {clearInputSloSelector,modalInputSloSelector,clearInputMeasureSelector,modalInputMeasureSelector,clearInputTargetSelector,modalInputTargetSelector,loadInputSloSelector,allSloURL,hideAllInputModalSelectorErrors,modalInputAcademicTermTag};

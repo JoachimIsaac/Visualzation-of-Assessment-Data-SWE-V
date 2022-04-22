@@ -1,6 +1,6 @@
-import { hideUnselectedSelectorError} from '/js/inputting.js';
+import {hideUnselectedSelectorError} from '/js/inputting.js';
 
-const allSloURL = 'https://visualization-practice-api.herokuapp.com/slo/all';
+const allSloURL = 'http://127.0.0.1:8000/slo/all';
 
 
 ////////////////////////////////Plot Modal Selector Elements////////////////////////
@@ -23,7 +23,8 @@ const modalPlotMeasureDescriptionTextbox = document.getElementById('modal-measur
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-//Adds option to slector element i.e (SLO, Measure or Start date Slectors).
+
+//Adds options to selector element i.e (SLO, Measure or Start date Selectors).
 function addOptionToSelectorElement(contents, count, selectorElement) {
     
     let tempOption = document.createElement('option');
@@ -36,7 +37,7 @@ function addOptionToSelectorElement(contents, count, selectorElement) {
 
 
 
-//Loads Selector with all current SLO Values.
+//Loads SLO Selector with all current SLO Values i.e S1, S2 etc.
 function loadSloSelector(allSloURL,sloSelector) {
 
     axios.get(allSloURL).then(response => {
@@ -63,7 +64,6 @@ function loadSloSelector(allSloURL,sloSelector) {
 
 
 
-//pass to input modal
 //Loads measure selector with measures bases on url (endpoint)
 function loadMeasureSelector(measureUrl,measureSelector) {
 
@@ -80,6 +80,7 @@ function loadMeasureSelector(measureUrl,measureSelector) {
 
                     addOptionToSelectorElement(measure, count, measureSelector);
                     count += 1;
+
                 }
 
             });
@@ -97,6 +98,7 @@ function loadMeasureSelector(measureUrl,measureSelector) {
 
 
 
+//Loads start date selector with dates bases on url (endpoint)
 function loadStartDateSelector(startDatesUrl) {
 
     axios.get(startDatesUrl).then(response => {
@@ -111,8 +113,6 @@ function loadStartDateSelector(startDatesUrl) {
                 addOptionToSelectorElement(date, count, modalPlotStartDateSelector);
                 count += 1;
             });
-
-
             
         }
 
@@ -123,10 +123,12 @@ function loadStartDateSelector(startDatesUrl) {
         alertUserOnApiCallError(status, genericMessage);
 
     });
+
 }
 
 
 
+//Loads end date selector with dates bases on url (endpoint)
 function loadEndDateSelector(endDatesUrl) {
     
     axios.get(endDatesUrl).then(response => {
@@ -153,10 +155,10 @@ function loadEndDateSelector(endDatesUrl) {
 
 
 
-//Loads SLO description textbox.
+//Loads SLO description textbox with the description for a specific SLO.
 function loadSloDescription(selectedSlo,sloDescriptionTextbox,sloDescriptionContainer) {
 
-    let sloDescriptionUrl = `https://visualization-practice-api.herokuapp.com/slo/description/${selectedSlo}`;
+    let sloDescriptionUrl = `http://127.0.0.1:8000/slo/description/${selectedSlo}`;
 
     axios.get(sloDescriptionUrl).then(response => { 
 
@@ -176,12 +178,11 @@ function loadSloDescription(selectedSlo,sloDescriptionTextbox,sloDescriptionCont
 
 
 
-//Loads Measure Description textbox
+//Loads Measure Description textbox with the description of a specific measure.
 function loadMeasureDescription(selectedSlo, selectedMeasure,measureDescriptionTextbox, measureDescriptionContainer) {
     
-    let measureDescriptionUrl = `https://visualization-practice-api.herokuapp.com/measure/description/${selectedSlo}/${selectedMeasure}`;
+    let measureDescriptionUrl = `http://127.0.0.1:8000/measure/description/${selectedSlo}/${selectedMeasure}`;
 
-  
     axios.get(measureDescriptionUrl).then(response => {
             
         measureDescriptionTextbox.value = `Measure Description: ${response.data}`;
@@ -200,8 +201,6 @@ function loadMeasureDescription(selectedSlo, selectedMeasure,measureDescriptionT
 
 
 
-
-
 //Clears Measure selector and adds default option "Choose Measure".
 function clearPlotMeasureSelector(modalPlotMeasureSelector) {
 
@@ -210,9 +209,9 @@ function clearPlotMeasureSelector(modalPlotMeasureSelector) {
     let tempOption = document.createElement('option');
     tempOption.value = 0;
     tempOption.textContent = "Choose Measure";
-    tempOption.disabled = true;
 
     modalPlotMeasureSelector.appendChild(tempOption);
+
 }
 
 
@@ -227,6 +226,7 @@ function clearPlotStartDateSelector(modalPlotStartDateSelector) {
     tempOption.textContent = "Choose Start Date";
 
     modalPlotStartDateSelector.appendChild(tempOption);
+
 }
 
 
@@ -241,11 +241,8 @@ function clearPlotEndDateSelector(modalPlotEndDateSelector) {
     tempOption.textContent = "Choose End Date";
    
     modalPlotEndDateSelector.appendChild(tempOption);
+
 }
-
-
-
-
 
 
 
@@ -256,19 +253,19 @@ modalPlotSloSelector.addEventListener('change', () => {
 
     const currentSelectedSlo = modalPlotSloSelector.options[modalPlotSloSelector.selectedIndex].textContent;
 
-    const measureUrl = `https://visualization-practice-api.herokuapp.com/measure/${currentSelectedSlo}`;
+    const measureUrl = `http://127.0.0.1:8000/measure/${currentSelectedSlo}`;
 
     clearPlotMeasureSelector(modalPlotMeasureSelector);
     clearPlotStartDateSelector(modalPlotStartDateSelector);
     clearPlotEndDateSelector(modalPlotEndDateSelector);
     
+    modalPlotMeasureSelector.options[0].setAttribute("disabled","disabled");
     modalPlotMeasureDescriptionContainer.style.display = "none";
 
     loadMeasureSelector(measureUrl,modalPlotMeasureSelector);
     loadSloDescription(currentSelectedSlo,modalPlotSloDescriptionTextbox,modalPlotSloDescriptionContainer);
+    
 });
-
-
 
 
 
@@ -285,16 +282,14 @@ modalPlotMeasureSelector.addEventListener('change', () => {
        
         const currentSelectedSlo = modalPlotSloSelector.options[modalPlotSloSelector.selectedIndex].textContent;
    
-        const startDatesUrl = `https://visualization-practice-api.herokuapp.com/dates/${currentSelectedSlo}/${selectedMeasure}`;
+        const startDatesUrl = `http://127.0.0.1:8000/dates/${currentSelectedSlo}/${selectedMeasure}`;
 
-        //Make a get start date function?
-       
         loadStartDateSelector(startDatesUrl);
 
         modalPlotStartDateSelector.selectedIndex = 0;
         modalPlotStartDateSelector.options[0].setAttribute("disabled", "disabled");
 
-        loadMeasureDescription(currentSelectedSlo, selectedMeasure,modalPlotMeasureDescriptionTextbox,modalPlotMeasureDescriptionContainer);
+        loadMeasureDescription(currentSelectedSlo,selectedMeasure,modalPlotMeasureDescriptionTextbox,modalPlotMeasureDescriptionContainer);
         
     }
 
@@ -311,31 +306,35 @@ modalPlotStartDateSelector.addEventListener('change', () => {
 
     const selectedStartDate = modalPlotStartDateSelector.options[modalPlotStartDateSelector.selectedIndex].textContent;
     
-    
     if (selectedStartDate != "Choose Start Date") { 
         
         const currentSelectedSlo = modalPlotSloSelector.options[modalPlotSloSelector.selectedIndex].textContent;
 
         const selectedMeasure = modalPlotMeasureSelector.options[modalPlotMeasureSelector.selectedIndex].textContent;
 
-        const endDatesUrl = `https://visualization-practice-api.herokuapp.com/startdate/${currentSelectedSlo}/${selectedMeasure}?start=${selectedStartDate}`;
+        const endDatesUrl = `http://127.0.0.1:8000/startdate/${currentSelectedSlo}/${selectedMeasure}?start=${selectedStartDate}`;
 
         
         loadEndDateSelector(endDatesUrl);
         modalPlotEndDateSelector.selectedIndex = 0;
         modalPlotEndDateSelector.options[0].setAttribute("disabled", "disabled");
-       
+
     }
+
 });
 
 
-modalPlotEndDateSelector.addEventListener('change',() => {
+
+//On Change event listener.
+modalPlotEndDateSelector.addEventListener('change', () => {
+    
     hideUnselectedSelectorError(modalPlotEndDateSelector);
     
 });
 
 
-//Window onLoad event listener
+
+//Window on load event listener
 window.addEventListener("load", () => {
 
     loadSloSelector(allSloURL,modalPlotSloSelector);
@@ -344,8 +343,7 @@ window.addEventListener("load", () => {
 
 
 
-
-// Gets the response for 400 type errors 
+// Gets the error message for 400 type response errors. 
 function getErrorResponse400(code) {
 
     let message = '';
@@ -371,7 +369,7 @@ function getErrorResponse400(code) {
 
 
 
-//Gets response for 500 type errors 
+//Gets the error message 500 type response errors 
 function getErrorResponse500(code) {
     
     let message = '';
@@ -392,7 +390,8 @@ function getErrorResponse500(code) {
 }
 
 
-//Check is response is an identifiable 400 error.
+
+//Check if response code is an identifiable 400 error.
 function isValid400Error(code) {
 
     if ((code == 400) || (code == 401) || (code == 403) || (code == 404) || (code == 412)) {
@@ -403,7 +402,8 @@ function isValid400Error(code) {
 }
 
 
-//Check is response is an identifiable 500 error.
+
+//Check if response code is an identifiable 500 error.
 function isValid500Error(code) {
     
     if ((code == 500) || (code == 503)) {
@@ -417,7 +417,7 @@ function isValid500Error(code) {
 
 
 //Alerts user if there is a request error.
-function alertUserOnApiCallError(status, genericMessage) {
+function alertUserOnApiCallError(status, genericMessage) {//add to other api calls
     
     if (isValid400Error(status)) {
             const message400 = getErrorResponse400(status);
@@ -434,4 +434,5 @@ function alertUserOnApiCallError(status, genericMessage) {
 }
 
 
-export { addOptionToSelectorElement, loadSloSelector,loadMeasureSelector,loadSloDescription,loadMeasureDescription};
+
+export { addOptionToSelectorElement, loadSloSelector,loadMeasureSelector,loadSloDescription,loadMeasureDescription,clearPlotMeasureSelector,clearPlotStartDateSelector,clearPlotEndDateSelector,modalPlotSloDescriptionContainer,modalPlotMeasureDescriptionContainer,isValid500Error,isValid400Error,getErrorResponse500,getErrorResponse400};

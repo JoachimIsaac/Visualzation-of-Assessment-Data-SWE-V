@@ -200,6 +200,30 @@ height: 1.2rem;
     font-family: monospace;
 }
 
+
+
+
+
+
+#error-message-area{
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+}
+
+#error-message-area > h1{
+    font-size: 5.5rem;
+    display: flex;
+    color: #1a8cff;
+    justify-content: center;
+}
+
+#error-message{
+    font-size: 20px;
+    font-family: monospace;
+}
+
+
 // #confirmation-message > h1 > i{
 
 //    font-size: 5rem;
